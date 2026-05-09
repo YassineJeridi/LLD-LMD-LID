@@ -793,6 +793,7 @@ window.bindSectionCards = function (catId) {
 // ═══════════════════════════════════════════════════════════
 document.addEventListener('DOMContentLoaded', () => {
     createToastContainer();
+    setupThemeToggle();
     setupMobileSidebar();
     setupBackToTop();
     setupSearch();
