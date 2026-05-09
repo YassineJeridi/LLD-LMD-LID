@@ -2,274 +2,274 @@
     "id": "ldd",
     "title": "LDD — Langage de Définition de Données",
     "subtitle": "Data Definition Language (DDL)",
-    "description": "LDD (DDL) contains the SQL commands used to define and manage the structure of a database. These commands create, modify, and delete database objects like tables, columns, and constraints. DDL changes the schema — the blueprint — not the data itself.",
+    "description": "Le LDD (DDL) regroupe les commandes SQL utilisées pour définir et gérer la structure d'une base de données. Ces commandes créent, modifient et suppriment des objets comme les tables, les colonnes et les contraintes. Le LDD modifie le schéma — la structure — et non les données elles-mêmes.",
     "sections": [
         {
             "id": "create-table",
             "name": "CREATE TABLE",
-            "explanation": "CREATE TABLE is used to create a new table in the database. You define the table name, each column name, and the data type for each column. You can also add constraints directly inside the CREATE TABLE statement.",
-            "syntax": "CREATE TABLE table_name (\n  column1 datatype [constraint],\n  column2 datatype [constraint],\n  ...\n);",
+            "explanation": "CREATE TABLE permet de créer une nouvelle table dans la base de données. Vous définissez le nom de la table, le nom de chaque colonne et le type de données associé. Vous pouvez également ajouter des contraintes directement dans l'instruction CREATE TABLE.",
+            "syntax": "CREATE TABLE nom_table (\n  colonne1 type_données [contrainte],\n  colonne2 type_données [contrainte],\n  ...\n);",
             "examples": [
                 {
-                    "title": "Create a simple Students table",
+                    "title": "Créer une table Étudiants simple",
                     "code": "CREATE TABLE Students (\n  id        INT,\n  name      VARCHAR(100),\n  age       INT,\n  email     VARCHAR(150)\n);",
-                    "explanation": "This creates a table called 'Students' with 4 columns: id (integer), name (up to 100 characters), age (integer), and email (up to 150 characters)."
+                    "explanation": "Crée une table 'Students' avec 4 colonnes : id (entier), name (jusqu'à 100 caractères), age (entier) et email (jusqu'à 150 caractères)."
                 },
                 {
-                    "title": "Create a table with a PRIMARY KEY and NOT NULL",
+                    "title": "Créer une table avec PRIMARY KEY et NOT NULL",
                     "code": "CREATE TABLE Employees (\n  emp_id    INT           PRIMARY KEY,\n  full_name VARCHAR(100)  NOT NULL,\n  salary    DECIMAL(10,2) NOT NULL,\n  hire_date DATE\n);",
-                    "explanation": "'emp_id' is the primary key (unique identifier for each row). 'full_name' and 'salary' cannot be empty (NOT NULL). 'hire_date' is optional."
+                    "explanation": "'emp_id' est la clé primaire (identifiant unique pour chaque ligne). 'full_name' et 'salary' ne peuvent pas être vides (NOT NULL). 'hire_date' est optionnel."
                 },
                 {
-                    "title": "Create a table with DEFAULT and UNIQUE",
+                    "title": "Créer une table avec DEFAULT et UNIQUE",
                     "code": "CREATE TABLE Products (\n  product_id   INT          PRIMARY KEY,\n  product_name VARCHAR(200) NOT NULL,\n  price        DECIMAL(8,2) DEFAULT 0.00,\n  sku          VARCHAR(50)  UNIQUE\n);",
-                    "explanation": "If no price is provided when inserting, it defaults to 0.00. The 'sku' column must be unique across all rows — no two products can share the same SKU."
+                    "explanation": "Si aucun prix n'est fourni à l'insertion, la valeur par défaut est 0.00. La colonne 'sku' doit être unique — deux produits ne peuvent pas partager le même SKU."
                 },
                 {
-                    "title": "Create a table with a FOREIGN KEY",
-                    "code": "CREATE TABLE Orders (\n  order_id   INT PRIMARY KEY,\n  customer_id INT NOT NULL,\n  order_date  DATE,\n  FOREIGN KEY (customer_id) REFERENCES Customers(customer_id)\n);",
-                    "explanation": "'customer_id' in Orders refers to the 'customer_id' in the Customers table. This enforces referential integrity — you cannot add an order for a customer that does not exist."
+                    "title": "Créer une table avec une FOREIGN KEY",
+                    "code": "CREATE TABLE Orders (\n  order_id    INT PRIMARY KEY,\n  customer_id INT NOT NULL,\n  order_date  DATE,\n  FOREIGN KEY (customer_id) REFERENCES Customers(customer_id)\n);",
+                    "explanation": "'customer_id' dans Orders fait référence à 'customer_id' dans la table Customers. Cela garantit l'intégrité référentielle — impossible d'ajouter une commande pour un client inexistant."
                 },
                 {
-                    "title": "Create a table with a CHECK constraint",
-                    "code": "CREATE TABLE Accounts (\n  account_id INT          PRIMARY KEY,\n  username   VARCHAR(50)  NOT NULL UNIQUE,\n  age        INT          CHECK (age >= 18),\n  balance    DECIMAL(12,2) CHECK (balance >= 0)\n);",
-                    "explanation": "The CHECK constraint ensures 'age' is always 18 or older, and 'balance' can never go below 0. The database will reject any INSERT or UPDATE that violates these rules."
+                    "title": "Créer une table avec une contrainte CHECK",
+                    "code": "CREATE TABLE Accounts (\n  account_id INT           PRIMARY KEY,\n  username   VARCHAR(50)   NOT NULL UNIQUE,\n  age        INT           CHECK (age >= 18),\n  balance    DECIMAL(12,2) CHECK (balance >= 0)\n);",
+                    "explanation": "La contrainte CHECK garantit que 'age' est toujours supérieur ou égal à 18, et que 'balance' ne peut jamais être négatif. La base de données refusera tout INSERT ou UPDATE violant ces règles."
                 }
             ]
         },
         {
             "id": "drop-table",
             "name": "DROP TABLE",
-            "explanation": "DROP TABLE permanently deletes an entire table and all of its data from the database. This action is irreversible — once dropped, the table and all its rows are gone. Use with extreme caution.",
-            "syntax": "DROP TABLE table_name;\n\n-- Safe version (no error if table doesn't exist):\nDROP TABLE IF EXISTS table_name;",
+            "explanation": "DROP TABLE supprime définitivement une table entière et toutes ses données. Cette action est irréversible — une fois supprimée, la table et toutes ses lignes sont perdues. À utiliser avec une extrême prudence.",
+            "syntax": "DROP TABLE nom_table;\n\n-- Version sécurisée (pas d'erreur si la table n'existe pas) :\nDROP TABLE IF EXISTS nom_table;",
             "examples": [
                 {
-                    "title": "Drop a table",
+                    "title": "Supprimer une table",
                     "code": "DROP TABLE Students;",
-                    "explanation": "This completely removes the 'Students' table and all its data permanently."
+                    "explanation": "Supprime complètement la table 'Students' et toutes ses données de façon permanente."
                 },
                 {
-                    "title": "Drop a table safely (no error if it doesn't exist)",
+                    "title": "Supprimer une table en toute sécurité (pas d'erreur si elle n'existe pas)",
                     "code": "DROP TABLE IF EXISTS TempData;",
-                    "explanation": "IF EXISTS prevents an error if 'TempData' doesn't exist. Safe to use in scripts where you're not sure if the table was created."
+                    "explanation": "IF EXISTS évite une erreur si 'TempData' n'existe pas. Pratique dans les scripts où l'existence de la table est incertaine."
                 }
             ]
         },
         {
             "id": "alter-add-column",
             "name": "ALTER TABLE — ADD COLUMN",
-            "explanation": "ALTER TABLE allows you to modify the structure of an existing table without deleting it. ADD COLUMN adds a new column to the table. Existing rows will have NULL in the new column unless you specify a DEFAULT value.",
-            "syntax": "ALTER TABLE table_name\nADD COLUMN column_name datatype [constraint];",
+            "explanation": "ALTER TABLE permet de modifier la structure d'une table existante sans la supprimer. ADD COLUMN ajoute une nouvelle colonne à la table. Les lignes existantes auront NULL dans la nouvelle colonne, sauf si vous spécifiez une valeur DEFAULT.",
+            "syntax": "ALTER TABLE nom_table\nADD COLUMN nom_colonne type_données [contrainte];",
             "examples": [
                 {
-                    "title": "Add a phone number column to Students",
+                    "title": "Ajouter une colonne numéro de téléphone à Students",
                     "code": "ALTER TABLE Students\nADD COLUMN phone VARCHAR(20);",
-                    "explanation": "Adds a 'phone' column to the existing Students table. All existing rows will have NULL for phone since no default was set."
+                    "explanation": "Ajoute une colonne 'phone' à la table Students existante. Toutes les lignes existantes auront NULL pour cette colonne, car aucune valeur par défaut n'a été définie."
                 },
                 {
-                    "title": "Add a column with a DEFAULT value",
+                    "title": "Ajouter une colonne avec une valeur DEFAULT",
                     "code": "ALTER TABLE Employees\nADD COLUMN status VARCHAR(20) DEFAULT 'active';",
-                    "explanation": "Adds a 'status' column. All existing rows automatically get the value 'active'. New rows will also default to 'active' unless specified."
+                    "explanation": "Ajoute une colonne 'status'. Toutes les lignes existantes obtiennent automatiquement la valeur 'active'. Les nouvelles lignes auront aussi 'active' par défaut sauf indication contraire."
                 },
                 {
-                    "title": "Add a NOT NULL column with a DEFAULT",
+                    "title": "Ajouter une colonne NOT NULL avec un DEFAULT",
                     "code": "ALTER TABLE Products\nADD COLUMN stock INT NOT NULL DEFAULT 0;",
-                    "explanation": "Adds a 'stock' column that cannot be NULL. The DEFAULT 0 is required here — without it, the NOT NULL constraint would fail on existing rows."
+                    "explanation": "Ajoute une colonne 'stock' qui ne peut pas être NULL. Le DEFAULT 0 est obligatoire ici — sans lui, la contrainte NOT NULL échouerait sur les lignes existantes."
                 }
             ]
         },
         {
             "id": "alter-modify-column",
             "name": "ALTER TABLE — MODIFY COLUMN",
-            "explanation": "MODIFY COLUMN (MySQL) or ALTER COLUMN (SQL Server/PostgreSQL) changes the data type, size, or constraints of an existing column. Be careful — changing a data type can cause data loss if existing values don't fit the new type.",
-            "syntax": "-- MySQL:\nALTER TABLE table_name\nMODIFY COLUMN column_name new_datatype [constraint];\n\n-- PostgreSQL / SQL Server:\nALTER TABLE table_name\nALTER COLUMN column_name TYPE new_datatype;",
+            "explanation": "MODIFY COLUMN (MySQL) ou ALTER COLUMN (SQL Server/PostgreSQL) modifie le type de données, la taille ou les contraintes d'une colonne existante. Attention — changer un type de données peut entraîner une perte de données si les valeurs existantes ne correspondent pas au nouveau type.",
+            "syntax": "-- MySQL :\nALTER TABLE nom_table\nMODIFY COLUMN nom_colonne nouveau_type [contrainte];\n\n-- PostgreSQL / SQL Server :\nALTER TABLE nom_table\nALTER COLUMN nom_colonne TYPE nouveau_type;",
             "examples": [
                 {
-                    "title": "Increase the size of a VARCHAR column (MySQL)",
+                    "title": "Augmenter la taille d'une colonne VARCHAR (MySQL)",
                     "code": "ALTER TABLE Students\nMODIFY COLUMN name VARCHAR(200);",
-                    "explanation": "The 'name' column was VARCHAR(100), now it's changed to VARCHAR(200) to allow longer names. No data is lost."
+                    "explanation": "La colonne 'name' était VARCHAR(100), elle passe à VARCHAR(200) pour accepter des noms plus longs. Aucune donnée n'est perdue."
                 },
                 {
-                    "title": "Change a column's data type (MySQL)",
+                    "title": "Changer le type de données d'une colonne (MySQL)",
                     "code": "ALTER TABLE Employees\nMODIFY COLUMN salary DECIMAL(12,2) NOT NULL;",
-                    "explanation": "Changes 'salary' to allow larger numbers (12 digits total, 2 decimal places) and also adds NOT NULL to the column."
+                    "explanation": "Modifie 'salary' pour autoriser des nombres plus grands (12 chiffres au total, 2 décimales) et ajoute la contrainte NOT NULL."
                 },
                 {
-                    "title": "Change column type in PostgreSQL",
+                    "title": "Changer le type d'une colonne en PostgreSQL",
                     "code": "ALTER TABLE Products\nALTER COLUMN price TYPE NUMERIC(10,2);",
-                    "explanation": "In PostgreSQL, the syntax uses ALTER COLUMN ... TYPE instead of MODIFY COLUMN."
+                    "explanation": "En PostgreSQL, la syntaxe utilise ALTER COLUMN ... TYPE au lieu de MODIFY COLUMN."
                 }
             ]
         },
         {
             "id": "alter-drop-column",
             "name": "ALTER TABLE — DROP COLUMN",
-            "explanation": "DROP COLUMN removes a column from an existing table along with all of its data. This is permanent and cannot be undone. Make sure you don't need that data before dropping.",
-            "syntax": "ALTER TABLE table_name\nDROP COLUMN column_name;",
+            "explanation": "DROP COLUMN supprime une colonne d'une table existante ainsi que toutes ses données. Cette action est permanente et irréversible. Assurez-vous de ne plus avoir besoin de ces données avant de supprimer la colonne.",
+            "syntax": "ALTER TABLE nom_table\nDROP COLUMN nom_colonne;",
             "examples": [
                 {
-                    "title": "Remove a column from a table",
+                    "title": "Supprimer une colonne d'une table",
                     "code": "ALTER TABLE Students\nDROP COLUMN phone;",
-                    "explanation": "Removes the 'phone' column and all its data from the Students table permanently."
+                    "explanation": "Supprime définitivement la colonne 'phone' et toutes ses données de la table Students."
                 },
                 {
-                    "title": "Drop multiple columns (MySQL)",
+                    "title": "Supprimer plusieurs colonnes (MySQL)",
                     "code": "ALTER TABLE Employees\nDROP COLUMN middle_name,\nDROP COLUMN fax_number;",
-                    "explanation": "You can chain multiple DROP COLUMN operations in a single ALTER TABLE statement."
+                    "explanation": "Vous pouvez enchaîner plusieurs opérations DROP COLUMN dans une seule instruction ALTER TABLE."
                 }
             ]
         },
         {
             "id": "alter-rename-column",
             "name": "ALTER TABLE — RENAME COLUMN",
-            "explanation": "RENAME COLUMN changes the name of an existing column without affecting its data or data type. Supported in MySQL 8.0+, PostgreSQL, and SQL Server.",
-            "syntax": "-- MySQL 8.0+ / PostgreSQL:\nALTER TABLE table_name\nRENAME COLUMN old_name TO new_name;\n\n-- MySQL older / SQL Server:\nALTER TABLE table_name\nCHANGE old_name new_name datatype;",
+            "explanation": "RENAME COLUMN change le nom d'une colonne existante sans affecter ses données ni son type. Disponible en MySQL 8.0+, PostgreSQL et SQL Server.",
+            "syntax": "-- MySQL 8.0+ / PostgreSQL :\nALTER TABLE nom_table\nRENAME COLUMN ancien_nom TO nouveau_nom;\n\n-- MySQL ancien / SQL Server :\nALTER TABLE nom_table\nCHANGE ancien_nom nouveau_nom type_données;",
             "examples": [
                 {
-                    "title": "Rename a column",
+                    "title": "Renommer une colonne",
                     "code": "ALTER TABLE Students\nRENAME COLUMN name TO full_name;",
-                    "explanation": "Changes the column name from 'name' to 'full_name'. All existing data in the column is preserved."
+                    "explanation": "Change le nom de la colonne de 'name' à 'full_name'. Toutes les données existantes dans la colonne sont conservées."
                 },
                 {
-                    "title": "Rename column in older MySQL with CHANGE",
+                    "title": "Renommer une colonne dans un ancien MySQL avec CHANGE",
                     "code": "ALTER TABLE Employees\nCHANGE emp_id employee_id INT;",
-                    "explanation": "In older MySQL versions, CHANGE is used. You must repeat the data type (INT here) even if it doesn't change."
+                    "explanation": "Dans les anciennes versions de MySQL, CHANGE est utilisé. Vous devez répéter le type de données (INT ici) même s'il ne change pas."
                 }
             ]
         },
         {
             "id": "rename-table",
             "name": "RENAME TABLE",
-            "explanation": "Renames an existing table. The data and structure remain the same — only the table name changes. In SQL Server the sp_rename procedure is used instead.",
-            "syntax": "-- MySQL:\nRENAME TABLE old_name TO new_name;\n\n-- PostgreSQL:\nALTER TABLE old_name RENAME TO new_name;\n\n-- SQL Server:\nEXEC sp_rename 'old_name', 'new_name';",
+            "explanation": "Renomme une table existante. Les données et la structure restent identiques — seul le nom de la table change. Dans SQL Server, on utilise la procédure sp_rename à la place.",
+            "syntax": "-- MySQL :\nRENAME TABLE ancien_nom TO nouveau_nom;\n\n-- PostgreSQL :\nALTER TABLE ancien_nom RENAME TO nouveau_nom;\n\n-- SQL Server :\nEXEC sp_rename 'ancien_nom', 'nouveau_nom';",
             "examples": [
                 {
-                    "title": "Rename a table in MySQL",
+                    "title": "Renommer une table en MySQL",
                     "code": "RENAME TABLE Students TO Learners;",
-                    "explanation": "The 'Students' table is now called 'Learners'. All data and structure remain intact."
+                    "explanation": "La table 'Students' s'appelle désormais 'Learners'. Toutes les données et la structure restent intactes."
                 },
                 {
-                    "title": "Rename a table in PostgreSQL",
+                    "title": "Renommer une table en PostgreSQL",
                     "code": "ALTER TABLE Employees RENAME TO Staff;",
-                    "explanation": "PostgreSQL uses the ALTER TABLE syntax to rename tables."
+                    "explanation": "PostgreSQL utilise la syntaxe ALTER TABLE pour renommer les tables."
                 }
             ]
         },
         {
             "id": "constraint-primary-key",
-            "name": "Constraint — PRIMARY KEY",
-            "explanation": "A PRIMARY KEY uniquely identifies each row in a table. It must be UNIQUE and NOT NULL. A table can only have one primary key. It can be a single column or a combination of columns (composite key).",
-            "syntax": "-- Single column:\nCREATE TABLE table_name (\n  col INT PRIMARY KEY,\n  ...\n);\n\n-- Composite key:\nCREATE TABLE table_name (\n  col1 INT,\n  col2 INT,\n  PRIMARY KEY (col1, col2)\n);\n\n-- Add to existing table:\nALTER TABLE table_name ADD PRIMARY KEY (column_name);",
+            "name": "Contrainte — PRIMARY KEY",
+            "explanation": "Une PRIMARY KEY identifie de façon unique chaque ligne d'une table. Elle doit être UNIQUE et NOT NULL. Une table ne peut avoir qu'une seule clé primaire. Elle peut porter sur une seule colonne ou sur plusieurs colonnes (clé composite).",
+            "syntax": "-- Colonne unique :\nCREATE TABLE nom_table (\n  col INT PRIMARY KEY,\n  ...\n);\n\n-- Clé composite :\nCREATE TABLE nom_table (\n  col1 INT,\n  col2 INT,\n  PRIMARY KEY (col1, col2)\n);\n\n-- Ajouter à une table existante :\nALTER TABLE nom_table ADD PRIMARY KEY (nom_colonne);",
             "examples": [
                 {
-                    "title": "Single-column primary key",
+                    "title": "Clé primaire sur une seule colonne",
                     "code": "CREATE TABLE Customers (\n  customer_id INT PRIMARY KEY,\n  name        VARCHAR(100) NOT NULL\n);",
-                    "explanation": "Each customer has a unique 'customer_id'. No two rows can have the same id, and it can never be NULL."
+                    "explanation": "Chaque client possède un 'customer_id' unique. Deux lignes ne peuvent pas avoir le même identifiant et il ne peut jamais être NULL."
                 },
                 {
-                    "title": "Composite primary key",
-                    "code": "CREATE TABLE Enrollments (\n  student_id INT,\n  course_id  INT,\n  enrolled_on DATE,\n  PRIMARY KEY (student_id, course_id)\n);",
-                    "explanation": "The combination of student_id + course_id is unique. A student can enroll in many courses, and a course can have many students — but the same student cannot enroll in the same course twice."
+                    "title": "Clé primaire composite",
+                    "code": "CREATE TABLE Enrollments (\n  student_id  INT,\n  course_id   INT,\n  enrolled_on DATE,\n  PRIMARY KEY (student_id, course_id)\n);",
+                    "explanation": "La combinaison student_id + course_id est unique. Un étudiant peut s'inscrire à plusieurs cours, et un cours peut avoir plusieurs étudiants — mais le même étudiant ne peut pas s'inscrire deux fois au même cours."
                 },
                 {
-                    "title": "Add primary key to existing table",
+                    "title": "Ajouter une clé primaire à une table existante",
                     "code": "ALTER TABLE Products\nADD PRIMARY KEY (product_id);",
-                    "explanation": "Adds a primary key constraint on the 'product_id' column of an existing table."
+                    "explanation": "Ajoute une contrainte de clé primaire sur la colonne 'product_id' d'une table existante."
                 }
             ]
         },
         {
             "id": "constraint-foreign-key",
-            "name": "Constraint — FOREIGN KEY",
-            "explanation": "A FOREIGN KEY creates a link between two tables. The value in the foreign key column must match a value in the referenced table's primary key (or be NULL). This enforces referential integrity — preventing orphaned records.",
-            "syntax": "-- In CREATE TABLE:\nFOREIGN KEY (column) REFERENCES other_table(other_column)\n\n-- In ALTER TABLE:\nALTER TABLE table_name\nADD FOREIGN KEY (column) REFERENCES other_table(other_column);",
+            "name": "Contrainte — FOREIGN KEY",
+            "explanation": "Une FOREIGN KEY crée un lien entre deux tables. La valeur dans la colonne de clé étrangère doit correspondre à une valeur dans la clé primaire de la table référencée (ou être NULL). Cela garantit l'intégrité référentielle — pas d'enregistrements orphelins.",
+            "syntax": "-- Dans CREATE TABLE :\nFOREIGN KEY (colonne) REFERENCES autre_table(autre_colonne)\n\n-- Dans ALTER TABLE :\nALTER TABLE nom_table\nADD FOREIGN KEY (colonne) REFERENCES autre_table(autre_colonne);",
             "examples": [
                 {
-                    "title": "Orders referencing Customers",
+                    "title": "Orders référençant Customers",
                     "code": "CREATE TABLE Customers (\n  customer_id INT PRIMARY KEY,\n  name        VARCHAR(100)\n);\n\nCREATE TABLE Orders (\n  order_id    INT PRIMARY KEY,\n  customer_id INT,\n  total       DECIMAL(10,2),\n  FOREIGN KEY (customer_id) REFERENCES Customers(customer_id)\n);",
-                    "explanation": "Every order must belong to a valid customer. You cannot insert an order with a customer_id that doesn't exist in Customers."
+                    "explanation": "Chaque commande doit appartenir à un client valide. Impossible d'insérer une commande avec un customer_id qui n'existe pas dans Customers."
                 },
                 {
-                    "title": "Foreign key with ON DELETE CASCADE",
+                    "title": "Clé étrangère avec ON DELETE CASCADE",
                     "code": "CREATE TABLE Orders (\n  order_id    INT PRIMARY KEY,\n  customer_id INT,\n  FOREIGN KEY (customer_id)\n    REFERENCES Customers(customer_id)\n    ON DELETE CASCADE\n);",
-                    "explanation": "ON DELETE CASCADE means: if a Customer is deleted, all their Orders are automatically deleted too. Prevents orphaned orders."
+                    "explanation": "ON DELETE CASCADE signifie : si un Client est supprimé, toutes ses Commandes sont automatiquement supprimées aussi. Évite les commandes orphelines."
                 }
             ]
         },
         {
             "id": "constraint-unique",
-            "name": "Constraint — UNIQUE",
-            "explanation": "The UNIQUE constraint ensures all values in a column are different. Unlike PRIMARY KEY, a table can have multiple UNIQUE columns, and UNIQUE columns can contain NULL values (treated as distinct).",
-            "syntax": "-- In column definition:\ncol_name datatype UNIQUE\n\n-- As table constraint:\nUNIQUE (column_name)\n\n-- Add to existing table:\nALTER TABLE table_name ADD UNIQUE (column_name);",
+            "name": "Contrainte — UNIQUE",
+            "explanation": "La contrainte UNIQUE garantit que toutes les valeurs d'une colonne sont différentes. Contrairement à PRIMARY KEY, une table peut avoir plusieurs colonnes UNIQUE, et les colonnes UNIQUE peuvent contenir des valeurs NULL (considérées comme distinctes).",
+            "syntax": "-- Dans la définition de la colonne :\nnom_col type_données UNIQUE\n\n-- Comme contrainte de table :\nUNIQUE (nom_colonne)\n\n-- Ajouter à une table existante :\nALTER TABLE nom_table ADD UNIQUE (nom_colonne);",
             "examples": [
                 {
-                    "title": "Unique email addresses",
-                    "code": "CREATE TABLE Users (\n  user_id INT PRIMARY KEY,\n  email   VARCHAR(150) UNIQUE,\n  username VARCHAR(50) UNIQUE\n);",
-                    "explanation": "No two users can have the same email or username. The database will reject a duplicate with an error."
+                    "title": "Adresses e-mail uniques",
+                    "code": "CREATE TABLE Users (\n  user_id  INT          PRIMARY KEY,\n  email    VARCHAR(150) UNIQUE,\n  username VARCHAR(50)  UNIQUE\n);",
+                    "explanation": "Deux utilisateurs ne peuvent pas avoir le même e-mail ou le même nom d'utilisateur. La base de données rejettera un doublon avec une erreur."
                 },
                 {
-                    "title": "Add unique constraint to existing table",
+                    "title": "Ajouter une contrainte unique à une table existante",
                     "code": "ALTER TABLE Products\nADD UNIQUE (sku);",
-                    "explanation": "Adds a UNIQUE constraint to the 'sku' column after the table was created."
+                    "explanation": "Ajoute une contrainte UNIQUE sur la colonne 'sku' après la création de la table."
                 }
             ]
         },
         {
             "id": "constraint-not-null",
-            "name": "Constraint — NOT NULL",
-            "explanation": "NOT NULL ensures that a column cannot store a NULL value. Every row must provide a value for that column. This is one of the most common constraints — use it on any column that should always have data.",
-            "syntax": "column_name datatype NOT NULL",
+            "name": "Contrainte — NOT NULL",
+            "explanation": "NOT NULL garantit qu'une colonne ne peut pas stocker une valeur NULL. Chaque ligne doit obligatoirement fournir une valeur pour cette colonne. C'est l'une des contraintes les plus courantes — à utiliser sur toute colonne devant toujours contenir une donnée.",
+            "syntax": "nom_colonne type_données NOT NULL",
             "examples": [
                 {
-                    "title": "Required fields with NOT NULL",
-                    "code": "CREATE TABLE Employees (\n  emp_id    INT          PRIMARY KEY,\n  first_name VARCHAR(50) NOT NULL,\n  last_name  VARCHAR(50) NOT NULL,\n  email      VARCHAR(150) NOT NULL,\n  department VARCHAR(100)\n);",
-                    "explanation": "first_name, last_name, and email are required — they cannot be left empty. 'department' is optional (nullable)."
+                    "title": "Champs obligatoires avec NOT NULL",
+                    "code": "CREATE TABLE Employees (\n  emp_id     INT          PRIMARY KEY,\n  first_name VARCHAR(50)  NOT NULL,\n  last_name  VARCHAR(50)  NOT NULL,\n  email      VARCHAR(150) NOT NULL,\n  department VARCHAR(100)\n);",
+                    "explanation": "first_name, last_name et email sont obligatoires — ils ne peuvent pas être laissés vides. 'department' est optionnel (peut être NULL)."
                 },
                 {
-                    "title": "Add NOT NULL to an existing column (MySQL)",
+                    "title": "Ajouter NOT NULL à une colonne existante (MySQL)",
                     "code": "ALTER TABLE Students\nMODIFY COLUMN email VARCHAR(150) NOT NULL;",
-                    "explanation": "Makes the 'email' column required. This will fail if any existing row already has NULL in the email column."
+                    "explanation": "Rend la colonne 'email' obligatoire. Cette opération échouera si une ligne existante contient déjà NULL dans la colonne email."
                 }
             ]
         },
         {
             "id": "constraint-default",
-            "name": "Constraint — DEFAULT",
-            "explanation": "DEFAULT sets an automatic value for a column when no value is provided during INSERT. This is useful for timestamps, status fields, counters, or any field that has a common starting value.",
-            "syntax": "column_name datatype DEFAULT value",
+            "name": "Contrainte — DEFAULT",
+            "explanation": "DEFAULT définit une valeur automatique pour une colonne lorsqu'aucune valeur n'est fournie lors d'un INSERT. Très utile pour les horodatages, les champs de statut, les compteurs ou tout champ ayant une valeur de départ commune.",
+            "syntax": "nom_colonne type_données DEFAULT valeur",
             "examples": [
                 {
-                    "title": "Default values for common fields",
+                    "title": "Valeurs par défaut pour des champs courants",
                     "code": "CREATE TABLE Posts (\n  post_id    INT          PRIMARY KEY,\n  title      VARCHAR(200) NOT NULL,\n  content    TEXT,\n  status     VARCHAR(20)  DEFAULT 'draft',\n  created_at DATETIME     DEFAULT CURRENT_TIMESTAMP,\n  views      INT          DEFAULT 0\n);",
-                    "explanation": "When a new post is inserted without specifying status, it defaults to 'draft'. created_at defaults to the current time. views starts at 0."
+                    "explanation": "Quand un article est inséré sans préciser le statut, il vaut 'draft' par défaut. created_at prend l'heure actuelle par défaut. views commence à 0."
                 },
                 {
-                    "title": "Add a default to an existing column",
+                    "title": "Ajouter une valeur par défaut à une colonne existante",
                     "code": "ALTER TABLE Products\nALTER COLUMN price SET DEFAULT 9.99;",
-                    "explanation": "Sets a default price of 9.99 for any new product inserted without a price. Existing rows are not affected."
+                    "explanation": "Définit un prix par défaut de 9.99 pour tout nouveau produit inséré sans prix. Les lignes existantes ne sont pas affectées."
                 }
             ]
         },
         {
             "id": "constraint-check",
-            "name": "Constraint — CHECK",
-            "explanation": "CHECK defines a condition that every value in a column must satisfy. The database rejects any INSERT or UPDATE that violates the condition. Great for enforcing business rules at the database level.",
-            "syntax": "-- Inline:\ncolumn_name datatype CHECK (condition)\n\n-- Named constraint:\nCONSTRAINT constraint_name CHECK (condition)",
+            "name": "Contrainte — CHECK",
+            "explanation": "CHECK définit une condition que chaque valeur d'une colonne doit respecter. La base de données rejette tout INSERT ou UPDATE qui viole la condition. Idéal pour imposer des règles métier directement au niveau de la base de données.",
+            "syntax": "-- En ligne :\nnom_colonne type_données CHECK (condition)\n\n-- Contrainte nommée :\nCONSTRAINT nom_contrainte CHECK (condition)",
             "examples": [
                 {
-                    "title": "Validate age and salary ranges",
+                    "title": "Valider les plages d'âge et de salaire",
                     "code": "CREATE TABLE Employees (\n  emp_id  INT           PRIMARY KEY,\n  name    VARCHAR(100)  NOT NULL,\n  age     INT           CHECK (age >= 18 AND age <= 65),\n  salary  DECIMAL(10,2) CHECK (salary > 0)\n);",
-                    "explanation": "Age must be between 18 and 65. Salary must be positive. Any INSERT or UPDATE violating these rules will be rejected."
+                    "explanation": "L'âge doit être compris entre 18 et 65 ans. Le salaire doit être positif. Tout INSERT ou UPDATE violant ces règles sera rejeté."
                 },
                 {
-                    "title": "Check constraint on string values",
+                    "title": "Contrainte CHECK sur des valeurs texte",
                     "code": "CREATE TABLE Orders (\n  order_id INT PRIMARY KEY,\n  status   VARCHAR(20) CHECK (status IN ('pending', 'shipped', 'delivered', 'cancelled'))\n);",
-                    "explanation": "The 'status' column can only hold one of the four listed values. Any other value is rejected by the database."
+                    "explanation": "La colonne 'status' ne peut contenir qu'une des quatre valeurs listées. Toute autre valeur est rejetée par la base de données."
                 },
                 {
-                    "title": "Named check constraint",
+                    "title": "Contrainte CHECK nommée",
                     "code": "CREATE TABLE Products (\n  product_id INT PRIMARY KEY,\n  price      DECIMAL(8,2),\n  discount   DECIMAL(5,2),\n  CONSTRAINT chk_discount CHECK (discount < price)\n);",
-                    "explanation": "The named constraint 'chk_discount' ensures the discount is always less than the price. Named constraints are easier to drop or modify later."
+                    "explanation": "La contrainte nommée 'chk_discount' garantit que la remise est toujours inférieure au prix. Les contraintes nommées sont plus faciles à supprimer ou modifier ultérieurement."
                 }
             ]
         }

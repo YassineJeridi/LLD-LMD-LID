@@ -2,289 +2,289 @@
     "id": "lid",
     "title": "LID — Langage d'Interrogation de Données",
     "subtitle": "Data Query Language (DQL)",
-    "description": "LID (DQL) is all about querying and reading data from the database. The core command is SELECT, and it is the most powerful and most-used command in SQL. You can filter, sort, group, join, and transform data entirely within a SELECT statement — without modifying anything in the database.",
+    "description": "Le LID (DQL) concerne l'interrogation et la lecture des données de la base. La commande centrale est SELECT — la plus puissante et la plus utilisée en SQL. Vous pouvez filtrer, trier, regrouper, joindre et transformer des données entièrement dans un SELECT, sans rien modifier dans la base.",
     "sections": [
         {
             "id": "select-basic",
-            "name": "SELECT — Basic",
-            "explanation": "SELECT retrieves data from one or more columns in a table. Use * to select all columns, or list specific column names. The result is returned as a table of rows — called a result set.",
-            "syntax": "-- All columns:\nSELECT * FROM table_name;\n\n-- Specific columns:\nSELECT column1, column2 FROM table_name;",
+            "name": "SELECT — Base",
+            "explanation": "SELECT récupère des données depuis une ou plusieurs colonnes d'une table. Utilisez * pour sélectionner toutes les colonnes, ou listez les noms de colonnes spécifiques. Le résultat est retourné sous forme de table de lignes — appelée ensemble de résultats.",
+            "syntax": "-- Toutes les colonnes :\nSELECT * FROM nom_table;\n\n-- Colonnes spécifiques :\nSELECT colonne1, colonne2 FROM nom_table;",
             "examples": [
                 {
-                    "title": "Select all columns from Students",
+                    "title": "Sélectionner toutes les colonnes de Students",
                     "code": "SELECT * FROM Students;",
-                    "explanation": "Returns every column and every row from the Students table. The * means 'all columns'."
+                    "explanation": "Renvoie toutes les colonnes et toutes les lignes de la table Students. Le * signifie 'toutes les colonnes'."
                 },
                 {
-                    "title": "Select only name and email",
+                    "title": "Sélectionner uniquement name et email",
                     "code": "SELECT name, email FROM Students;",
-                    "explanation": "Returns only the 'name' and 'email' columns. Selecting specific columns is better practice than using * — faster and clearer."
+                    "explanation": "Renvoie uniquement les colonnes 'name' et 'email'. Sélectionner des colonnes spécifiques est une meilleure pratique que d'utiliser * — plus rapide et plus lisible."
                 },
                 {
-                    "title": "Select with a calculated column",
+                    "title": "Sélectionner avec une colonne calculée",
                     "code": "SELECT\n  product_name,\n  price,\n  price * 1.20 AS price_with_tax\nFROM Products;",
-                    "explanation": "Creates a calculated column 'price_with_tax' on the fly. The AS keyword gives it a readable name. The original data in the table is not changed."
+                    "explanation": "Crée une colonne calculée 'price_with_tax' à la volée. Le mot-clé AS lui donne un nom lisible. Les données d'origine dans la table ne sont pas modifiées."
                 }
             ]
         },
         {
             "id": "where",
-            "name": "WHERE — Filtering Rows",
-            "explanation": "WHERE filters the rows returned by a SELECT (or used by UPDATE/DELETE). Only rows that match the condition are included. You can use comparison operators (=, !=, <, >, <=, >=), logical operators (AND, OR, NOT), and special keywords (IN, BETWEEN, LIKE, IS NULL).",
-            "syntax": "SELECT column1, column2\nFROM table_name\nWHERE condition;",
+            "name": "WHERE — Filtrer les lignes",
+            "explanation": "WHERE filtre les lignes retournées par un SELECT (ou utilisées par UPDATE/DELETE). Seules les lignes correspondant à la condition sont incluses. Vous pouvez utiliser des opérateurs de comparaison (=, !=, <, >, <=, >=), des opérateurs logiques (AND, OR, NOT) et des mots-clés spéciaux (IN, BETWEEN, LIKE, IS NULL).",
+            "syntax": "SELECT colonne1, colonne2\nFROM nom_table\nWHERE condition;",
             "examples": [
                 {
-                    "title": "Find students older than 21",
+                    "title": "Trouver les étudiants de plus de 21 ans",
                     "code": "SELECT name, age\nFROM Students\nWHERE age > 21;",
-                    "explanation": "Returns only students where age is greater than 21."
+                    "explanation": "Renvoie uniquement les étudiants dont l'âge est supérieur à 21."
                 },
                 {
-                    "title": "Multiple conditions with AND / OR",
-                    "code": "SELECT name, age, email\nFROM Students\nWHERE age >= 18 AND age <= 25;\n\n-- OR example:\nSELECT * FROM Products\nWHERE category = 'Electronics' OR price < 20;",
-                    "explanation": "AND requires both conditions to be true. OR requires at least one to be true."
+                    "title": "Conditions multiples avec AND / OR",
+                    "code": "SELECT name, age, email\nFROM Students\nWHERE age >= 18 AND age <= 25;\n\n-- Exemple avec OR :\nSELECT * FROM Products\nWHERE category = 'Electronics' OR price < 20;",
+                    "explanation": "AND exige que les deux conditions soient vraies. OR exige qu'au moins une soit vraie."
                 },
                 {
-                    "title": "IN — match a list of values",
+                    "title": "IN — correspondance avec une liste de valeurs",
                     "code": "SELECT * FROM Employees\nWHERE department IN ('IT', 'Sales', 'HR');",
-                    "explanation": "IN is a shortcut for multiple OR conditions. Returns employees in IT, Sales, or HR departments."
+                    "explanation": "IN est un raccourci pour plusieurs conditions OR. Renvoie les employés des départements IT, Sales ou HR."
                 },
                 {
-                    "title": "BETWEEN — range of values",
+                    "title": "BETWEEN — plage de valeurs",
                     "code": "SELECT product_name, price\nFROM Products\nWHERE price BETWEEN 10 AND 100;",
-                    "explanation": "BETWEEN is inclusive — it includes both 10 and 100. Equivalent to price >= 10 AND price <= 100."
+                    "explanation": "BETWEEN est inclusif — il inclut 10 et 100. Équivalent à price >= 10 AND price <= 100."
                 },
                 {
-                    "title": "LIKE — pattern matching",
-                    "code": "-- Names starting with 'A':\nSELECT * FROM Students WHERE name LIKE 'A%';\n\n-- Names ending with 'son':\nSELECT * FROM Students WHERE name LIKE '%son';\n\n-- Names containing 'ali':\nSELECT * FROM Students WHERE name LIKE '%ali%';",
-                    "explanation": "% matches any sequence of characters (including none). _ matches exactly one character. LIKE is used for partial text matching — case sensitivity depends on the database."
+                    "title": "LIKE — correspondance par motif",
+                    "code": "-- Noms commençant par 'A' :\nSELECT * FROM Students WHERE name LIKE 'A%';\n\n-- Noms se terminant par 'son' :\nSELECT * FROM Students WHERE name LIKE '%son';\n\n-- Noms contenant 'ali' :\nSELECT * FROM Students WHERE name LIKE '%ali%';",
+                    "explanation": "% correspond à toute séquence de caractères (y compris aucun). _ correspond exactement à un caractère. LIKE est utilisé pour la recherche partielle de texte — la sensibilité à la casse dépend de la base de données."
                 },
                 {
-                    "title": "IS NULL — check for missing values",
-                    "code": "-- Find employees with no department:\nSELECT * FROM Employees WHERE department IS NULL;\n\n-- Find employees that DO have a department:\nSELECT * FROM Employees WHERE department IS NOT NULL;",
-                    "explanation": "You cannot use = NULL to check for NULL — you must use IS NULL. NULL means 'unknown/missing', not zero or empty string."
+                    "title": "IS NULL — vérifier les valeurs manquantes",
+                    "code": "-- Trouver les employés sans département :\nSELECT * FROM Employees WHERE department IS NULL;\n\n-- Trouver les employés qui ONT un département :\nSELECT * FROM Employees WHERE department IS NOT NULL;",
+                    "explanation": "Vous ne pouvez pas utiliser = NULL pour vérifier NULL — vous devez utiliser IS NULL. NULL signifie 'inconnu/manquant', pas zéro ni chaîne vide."
                 }
             ]
         },
         {
             "id": "order-by",
-            "name": "ORDER BY — Sorting Results",
-            "explanation": "ORDER BY sorts the result set by one or more columns. ASC (ascending, smallest to largest, A to Z) is the default. DESC (descending, largest to smallest, Z to A) reverses the order.",
-            "syntax": "SELECT column1, column2\nFROM table_name\nORDER BY column1 [ASC|DESC], column2 [ASC|DESC];",
+            "name": "ORDER BY — Trier les résultats",
+            "explanation": "ORDER BY trie l'ensemble de résultats selon une ou plusieurs colonnes. ASC (ascendant, du plus petit au plus grand, de A à Z) est la valeur par défaut. DESC (descendant, du plus grand au plus petit, de Z à A) inverse l'ordre.",
+            "syntax": "SELECT colonne1, colonne2\nFROM nom_table\nORDER BY colonne1 [ASC|DESC], colonne2 [ASC|DESC];",
             "examples": [
                 {
-                    "title": "Sort students by age (youngest first)",
+                    "title": "Trier les étudiants par âge (les plus jeunes en premier)",
                     "code": "SELECT name, age\nFROM Students\nORDER BY age ASC;",
-                    "explanation": "Results are sorted from youngest to oldest. ASC is the default so it can be omitted."
+                    "explanation": "Les résultats sont triés du plus jeune au plus âgé. ASC est la valeur par défaut, il peut être omis."
                 },
                 {
-                    "title": "Sort products by price (most expensive first)",
+                    "title": "Trier les produits par prix (les plus chers en premier)",
                     "code": "SELECT product_name, price\nFROM Products\nORDER BY price DESC;",
-                    "explanation": "DESC reverses the sort — highest price appears first."
+                    "explanation": "DESC inverse le tri — le prix le plus élevé apparaît en premier."
                 },
                 {
-                    "title": "Sort by multiple columns",
+                    "title": "Trier sur plusieurs colonnes",
                     "code": "SELECT name, department, salary\nFROM Employees\nORDER BY department ASC, salary DESC;",
-                    "explanation": "First sorted alphabetically by department. Within the same department, employees are sorted by salary from highest to lowest."
+                    "explanation": "Trié d'abord alphabétiquement par département. Au sein d'un même département, les employés sont triés par salaire du plus élevé au plus bas."
                 }
             ]
         },
         {
             "id": "limit",
-            "name": "LIMIT / TOP — Restricting Rows",
-            "explanation": "LIMIT (MySQL/PostgreSQL) or TOP (SQL Server) restricts how many rows are returned. Useful for pagination, previewing data, or finding top/bottom N records.",
-            "syntax": "-- MySQL / PostgreSQL:\nSELECT * FROM table_name LIMIT n;\nSELECT * FROM table_name LIMIT n OFFSET skip;\n\n-- SQL Server:\nSELECT TOP n * FROM table_name;",
+            "name": "LIMIT / TOP — Limiter les lignes",
+            "explanation": "LIMIT (MySQL/PostgreSQL) ou TOP (SQL Server) limite le nombre de lignes retournées. Utile pour la pagination, la prévisualisation de données ou la recherche des N premiers/derniers enregistrements.",
+            "syntax": "-- MySQL / PostgreSQL :\nSELECT * FROM nom_table LIMIT n;\nSELECT * FROM nom_table LIMIT n OFFSET décalage;\n\n-- SQL Server :\nSELECT TOP n * FROM nom_table;",
             "examples": [
                 {
-                    "title": "Get the first 5 students",
+                    "title": "Obtenir les 5 premiers étudiants",
                     "code": "SELECT * FROM Students\nLIMIT 5;",
-                    "explanation": "Returns only the first 5 rows. Without ORDER BY, the order is not guaranteed — add ORDER BY to get meaningful top results."
+                    "explanation": "Renvoie uniquement les 5 premières lignes. Sans ORDER BY, l'ordre n'est pas garanti — ajoutez ORDER BY pour obtenir des résultats pertinents."
                 },
                 {
-                    "title": "Top 3 most expensive products",
+                    "title": "Les 3 produits les plus chers",
                     "code": "SELECT product_name, price\nFROM Products\nORDER BY price DESC\nLIMIT 3;",
-                    "explanation": "Sorts by price descending then takes only the top 3 — the three most expensive products."
+                    "explanation": "Trie par prix décroissant puis ne conserve que les 3 premiers — les trois produits les plus chers."
                 },
                 {
-                    "title": "Pagination with OFFSET",
-                    "code": "-- Page 1 (rows 1-10):\nSELECT * FROM Products ORDER BY product_id LIMIT 10 OFFSET 0;\n\n-- Page 2 (rows 11-20):\nSELECT * FROM Products ORDER BY product_id LIMIT 10 OFFSET 10;\n\n-- Page 3 (rows 21-30):\nSELECT * FROM Products ORDER BY product_id LIMIT 10 OFFSET 20;",
-                    "explanation": "OFFSET skips a number of rows. Used for pagination — showing 10 results per page."
+                    "title": "Pagination avec OFFSET",
+                    "code": "-- Page 1 (lignes 1-10) :\nSELECT * FROM Products ORDER BY product_id LIMIT 10 OFFSET 0;\n\n-- Page 2 (lignes 11-20) :\nSELECT * FROM Products ORDER BY product_id LIMIT 10 OFFSET 10;\n\n-- Page 3 (lignes 21-30) :\nSELECT * FROM Products ORDER BY product_id LIMIT 10 OFFSET 20;",
+                    "explanation": "OFFSET ignore un certain nombre de lignes. Utilisé pour la pagination — afficher 10 résultats par page."
                 }
             ]
         },
         {
             "id": "distinct",
-            "name": "DISTINCT — Remove Duplicates",
-            "explanation": "DISTINCT removes duplicate rows from the result set. It compares all selected columns together — a row is considered a duplicate only if all selected columns match.",
-            "syntax": "SELECT DISTINCT column1, column2\nFROM table_name;",
+            "name": "DISTINCT — Supprimer les doublons",
+            "explanation": "DISTINCT supprime les lignes dupliquées de l'ensemble de résultats. Il compare toutes les colonnes sélectionnées ensemble — une ligne est considérée comme dupliquée seulement si toutes les colonnes sélectionnées correspondent.",
+            "syntax": "SELECT DISTINCT colonne1, colonne2\nFROM nom_table;",
             "examples": [
                 {
-                    "title": "List all unique departments",
+                    "title": "Lister tous les départements uniques",
                     "code": "SELECT DISTINCT department\nFROM Employees;",
-                    "explanation": "Returns each department name only once, even if many employees share the same department."
+                    "explanation": "Renvoie chaque nom de département une seule fois, même si de nombreux employés partagent le même département."
                 },
                 {
-                    "title": "Unique combinations of city and country",
+                    "title": "Combinaisons uniques de ville et pays",
                     "code": "SELECT DISTINCT city, country\nFROM Customers\nORDER BY country, city;",
-                    "explanation": "Returns unique city-country pairs. 'Paris, France' and 'Paris, USA' would both appear since the combination is different."
+                    "explanation": "Renvoie des paires ville-pays uniques. 'Paris, France' et 'Paris, USA' apparaîtraient tous les deux car la combinaison est différente."
                 }
             ]
         },
         {
             "id": "aliases",
-            "name": "Aliases — AS",
-            "explanation": "Aliases give a temporary name to a column or table in a query. They make results more readable and are often required when working with calculated columns or JOINs. Column aliases appear in the result headers. Table aliases shorten long table names.",
-            "syntax": "-- Column alias:\nSELECT column_name AS alias_name FROM table;\n\n-- Table alias:\nSELECT t.column FROM table_name AS t;",
+            "name": "Alias — AS",
+            "explanation": "Les alias donnent un nom temporaire à une colonne ou à une table dans une requête. Ils rendent les résultats plus lisibles et sont souvent nécessaires avec des colonnes calculées ou des JOINs. Les alias de colonnes apparaissent dans les en-têtes de résultat. Les alias de tables raccourcissent les noms longs.",
+            "syntax": "-- Alias de colonne :\nSELECT nom_colonne AS nom_alias FROM table;\n\n-- Alias de table :\nSELECT t.colonne FROM nom_table AS t;",
             "examples": [
                 {
-                    "title": "Rename columns in the result",
-                    "code": "SELECT\n  emp_id     AS 'Employee ID',\n  full_name  AS 'Full Name',\n  salary     AS 'Monthly Salary'\nFROM Employees;",
-                    "explanation": "The column headers in the result show 'Employee ID', 'Full Name', 'Monthly Salary' instead of the raw column names."
+                    "title": "Renommer les colonnes dans le résultat",
+                    "code": "SELECT\n  emp_id     AS 'ID Employé',\n  full_name  AS 'Nom complet',\n  salary     AS 'Salaire mensuel'\nFROM Employees;",
+                    "explanation": "Les en-têtes de colonnes dans le résultat affichent 'ID Employé', 'Nom complet', 'Salaire mensuel' au lieu des noms de colonnes bruts."
                 },
                 {
-                    "title": "Table alias to shorten queries",
+                    "title": "Alias de table pour raccourcir les requêtes",
                     "code": "SELECT\n  s.name  AS student_name,\n  s.age,\n  s.email\nFROM Students AS s\nWHERE s.age > 20;",
-                    "explanation": "'s' is an alias for the Students table. This is especially useful in JOINs where you reference two tables simultaneously."
+                    "explanation": "'s' est un alias pour la table Students. Particulièrement utile dans les JOINs où vous référencez deux tables simultanément."
                 },
                 {
-                    "title": "Alias on a calculated column",
-                    "code": "SELECT\n  product_name,\n  price,\n  price * 0.90         AS discounted_price,\n  price - (price * 0.90) AS savings\nFROM Products;",
-                    "explanation": "Both 'discounted_price' and 'savings' are calculated columns with readable aliases. They exist only in the result — the original table is unchanged."
+                    "title": "Alias sur une colonne calculée",
+                    "code": "SELECT\n  product_name,\n  price,\n  price * 0.90           AS prix_remise,\n  price - (price * 0.90) AS economie\nFROM Products;",
+                    "explanation": "'prix_remise' et 'economie' sont des colonnes calculées avec des alias lisibles. Elles n'existent que dans le résultat — la table d'origine n'est pas modifiée."
                 }
             ]
         },
         {
             "id": "group-by",
-            "name": "GROUP BY — Aggregating Data",
-            "explanation": "GROUP BY groups rows that share the same value in one or more columns, then applies aggregate functions (COUNT, SUM, AVG, MIN, MAX) to each group. Every column in SELECT must either be in GROUP BY or wrapped in an aggregate function.",
-            "syntax": "SELECT column, AGGREGATE_FUNCTION(other_column)\nFROM table_name\nGROUP BY column;",
+            "name": "GROUP BY — Agréger les données",
+            "explanation": "GROUP BY regroupe les lignes partageant la même valeur dans une ou plusieurs colonnes, puis applique des fonctions d'agrégation (COUNT, SUM, AVG, MIN, MAX) à chaque groupe. Chaque colonne dans SELECT doit soit être dans GROUP BY, soit être entourée d'une fonction d'agrégation.",
+            "syntax": "SELECT colonne, FONCTION_AGGRÉGATION(autre_colonne)\nFROM nom_table\nGROUP BY colonne;",
             "examples": [
                 {
-                    "title": "Count students per age",
-                    "code": "SELECT age, COUNT(*) AS total_students\nFROM Students\nGROUP BY age\nORDER BY age;",
-                    "explanation": "Groups all students by age and counts how many students share each age. COUNT(*) counts all rows in the group."
+                    "title": "Compter les étudiants par âge",
+                    "code": "SELECT age, COUNT(*) AS total_etudiants\nFROM Students\nGROUP BY age\nORDER BY age;",
+                    "explanation": "Regroupe tous les étudiants par âge et compte combien partagent chaque âge. COUNT(*) compte toutes les lignes du groupe."
                 },
                 {
-                    "title": "Total sales per department",
-                    "code": "SELECT\n  department,\n  COUNT(*)          AS employee_count,\n  AVG(salary)       AS avg_salary,\n  SUM(salary)       AS total_payroll,\n  MAX(salary)       AS highest_salary,\n  MIN(salary)       AS lowest_salary\nFROM Employees\nGROUP BY department;",
-                    "explanation": "For each department: counts employees, calculates average salary, sums all salaries, and shows highest and lowest salary."
+                    "title": "Total des salaires par département",
+                    "code": "SELECT\n  department,\n  COUNT(*)          AS nb_employes,\n  AVG(salary)       AS salaire_moyen,\n  SUM(salary)       AS masse_salariale,\n  MAX(salary)       AS salaire_max,\n  MIN(salary)       AS salaire_min\nFROM Employees\nGROUP BY department;",
+                    "explanation": "Pour chaque département : compte les employés, calcule le salaire moyen, additionne tous les salaires et affiche le salaire le plus haut et le plus bas."
                 },
                 {
-                    "title": "Group by multiple columns",
-                    "code": "SELECT\n  department,\n  status,\n  COUNT(*) AS count\nFROM Employees\nGROUP BY department, status;",
-                    "explanation": "Groups by the combination of department AND status. You'd get one row per unique (department, status) pair."
+                    "title": "Grouper par plusieurs colonnes",
+                    "code": "SELECT\n  department,\n  status,\n  COUNT(*) AS total\nFROM Employees\nGROUP BY department, status;",
+                    "explanation": "Regroupe par la combinaison département ET statut. Vous obtenez une ligne par paire (département, statut) unique."
                 }
             ]
         },
         {
             "id": "having",
-            "name": "HAVING — Filtering Groups",
-            "explanation": "HAVING filters groups created by GROUP BY. It's like WHERE but for groups. Use WHERE to filter individual rows before grouping, and HAVING to filter groups after aggregation. You cannot use aggregate functions in WHERE.",
-            "syntax": "SELECT column, AGGREGATE_FUNCTION(col)\nFROM table_name\nGROUP BY column\nHAVING AGGREGATE_FUNCTION(col) condition;",
+            "name": "HAVING — Filtrer les groupes",
+            "explanation": "HAVING filtre les groupes créés par GROUP BY. C'est comme WHERE mais pour les groupes. Utilisez WHERE pour filtrer les lignes individuelles avant le regroupement, et HAVING pour filtrer les groupes après l'agrégation. Vous ne pouvez pas utiliser des fonctions d'agrégation dans WHERE.",
+            "syntax": "SELECT colonne, FONCTION_AGGRÉGATION(col)\nFROM nom_table\nGROUP BY colonne\nHAVING FONCTION_AGGRÉGATION(col) condition;",
             "examples": [
                 {
-                    "title": "Find departments with more than 5 employees",
-                    "code": "SELECT department, COUNT(*) AS employee_count\nFROM Employees\nGROUP BY department\nHAVING COUNT(*) > 5;",
-                    "explanation": "First groups employees by department, then filters out departments with 5 or fewer employees. Only departments with more than 5 employees appear in the result."
+                    "title": "Trouver les départements avec plus de 5 employés",
+                    "code": "SELECT department, COUNT(*) AS nb_employes\nFROM Employees\nGROUP BY department\nHAVING COUNT(*) > 5;",
+                    "explanation": "Regroupe d'abord les employés par département, puis élimine les départements avec 5 employés ou moins. Seuls les départements avec plus de 5 employés apparaissent dans le résultat."
                 },
                 {
-                    "title": "WHERE vs HAVING — used together",
-                    "code": "SELECT department, AVG(salary) AS avg_salary\nFROM Employees\nWHERE status = 'active'         -- filter rows first\nGROUP BY department\nHAVING AVG(salary) > 3000;      -- then filter groups",
-                    "explanation": "WHERE filters out inactive employees before grouping. HAVING then filters out departments where the average salary of active employees is 3000 or less."
+                    "title": "WHERE vs HAVING — utilisés ensemble",
+                    "code": "SELECT department, AVG(salary) AS salaire_moyen\nFROM Employees\nWHERE status = 'active'         -- filtrer les lignes d'abord\nGROUP BY department\nHAVING AVG(salary) > 3000;      -- puis filtrer les groupes",
+                    "explanation": "WHERE exclut les employés inactifs avant le regroupement. HAVING exclut ensuite les départements où le salaire moyen des employés actifs est inférieur ou égal à 3000."
                 },
                 {
-                    "title": "Products with total sold quantity over 1000",
-                    "code": "SELECT product_id, SUM(quantity) AS total_sold\nFROM OrderItems\nGROUP BY product_id\nHAVING SUM(quantity) > 1000\nORDER BY total_sold DESC;",
-                    "explanation": "Groups order items by product, sums quantities, then keeps only products where total sold exceeds 1000."
+                    "title": "Produits avec une quantité totale vendue supérieure à 1000",
+                    "code": "SELECT product_id, SUM(quantity) AS total_vendu\nFROM OrderItems\nGROUP BY product_id\nHAVING SUM(quantity) > 1000\nORDER BY total_vendu DESC;",
+                    "explanation": "Regroupe les articles de commande par produit, additionne les quantités, puis ne conserve que les produits dont le total vendu dépasse 1000."
                 }
             ]
         },
         {
             "id": "inner-join",
             "name": "INNER JOIN",
-            "explanation": "INNER JOIN combines rows from two tables where the join condition is matched in both tables. Rows that have no match in the other table are excluded from the result. This is the most common type of JOIN.",
-            "syntax": "SELECT t1.col, t2.col\nFROM table1 AS t1\nINNER JOIN table2 AS t2\n  ON t1.common_col = t2.common_col;",
+            "explanation": "INNER JOIN combine les lignes de deux tables lorsque la condition de jointure est satisfaite dans les deux tables. Les lignes sans correspondance dans l'autre table sont exclues du résultat. C'est le type de JOIN le plus courant.",
+            "syntax": "SELECT t1.col, t2.col\nFROM table1 AS t1\nINNER JOIN table2 AS t2\n  ON t1.colonne_commune = t2.colonne_commune;",
             "examples": [
                 {
-                    "title": "Get orders with customer names",
-                    "code": "SELECT\n  o.order_id,\n  c.name AS customer_name,\n  o.total,\n  o.order_date\nFROM Orders AS o\nINNER JOIN Customers AS c\n  ON o.customer_id = c.customer_id;",
-                    "explanation": "Combines Orders and Customers tables where customer_id matches. Orders with no matching customer (data error) are excluded."
+                    "title": "Obtenir les commandes avec les noms des clients",
+                    "code": "SELECT\n  o.order_id,\n  c.name AS nom_client,\n  o.total,\n  o.order_date\nFROM Orders AS o\nINNER JOIN Customers AS c\n  ON o.customer_id = c.customer_id;",
+                    "explanation": "Combine les tables Orders et Customers là où customer_id correspond. Les commandes sans client correspondant (erreur de données) sont exclues."
                 },
                 {
-                    "title": "Join three tables",
-                    "code": "SELECT\n  o.order_id,\n  c.name      AS customer,\n  p.product_name,\n  oi.quantity\nFROM Orders AS o\nINNER JOIN Customers AS c  ON o.customer_id = c.customer_id\nINNER JOIN OrderItems AS oi ON o.order_id    = oi.order_id\nINNER JOIN Products AS p   ON oi.product_id  = p.product_id;",
-                    "explanation": "Chains three INNER JOINs to show a complete view: which customer ordered which product and in what quantity."
+                    "title": "Joindre trois tables",
+                    "code": "SELECT\n  o.order_id,\n  c.name        AS client,\n  p.product_name,\n  oi.quantity\nFROM Orders AS o\nINNER JOIN Customers AS c   ON o.customer_id = c.customer_id\nINNER JOIN OrderItems AS oi ON o.order_id    = oi.order_id\nINNER JOIN Products AS p    ON oi.product_id  = p.product_id;",
+                    "explanation": "Enchaîne trois INNER JOINs pour afficher une vue complète : quel client a commandé quel produit et en quelle quantité."
                 }
             ]
         },
         {
             "id": "left-join",
             "name": "LEFT JOIN",
-            "explanation": "LEFT JOIN returns ALL rows from the left table and matching rows from the right table. If there is no match in the right table, NULL values fill the right table's columns. Used when you want to keep all records from the left table regardless of matches.",
-            "syntax": "SELECT t1.col, t2.col\nFROM table1 AS t1\nLEFT JOIN table2 AS t2\n  ON t1.common_col = t2.common_col;",
+            "explanation": "LEFT JOIN renvoie TOUTES les lignes de la table de gauche et les lignes correspondantes de la table de droite. S'il n'y a pas de correspondance dans la table de droite, les colonnes de cette table prennent la valeur NULL. Utilisé quand vous voulez conserver tous les enregistrements de la table de gauche, qu'il y ait une correspondance ou non.",
+            "syntax": "SELECT t1.col, t2.col\nFROM table1 AS t1\nLEFT JOIN table2 AS t2\n  ON t1.colonne_commune = t2.colonne_commune;",
             "examples": [
                 {
-                    "title": "All customers, with their orders (if any)",
-                    "code": "SELECT\n  c.name          AS customer_name,\n  o.order_id,\n  o.total\nFROM Customers AS c\nLEFT JOIN Orders AS o\n  ON c.customer_id = o.customer_id;",
-                    "explanation": "All customers appear in the result. Customers who have never placed an order will show NULL for order_id and total."
+                    "title": "Tous les clients, avec leurs commandes (s'ils en ont)",
+                    "code": "SELECT\n  c.name     AS nom_client,\n  o.order_id,\n  o.total\nFROM Customers AS c\nLEFT JOIN Orders AS o\n  ON c.customer_id = o.customer_id;",
+                    "explanation": "Tous les clients apparaissent dans le résultat. Les clients n'ayant jamais passé de commande afficheront NULL pour order_id et total."
                 },
                 {
-                    "title": "Find customers with NO orders",
+                    "title": "Trouver les clients sans aucune commande",
                     "code": "SELECT c.name\nFROM Customers AS c\nLEFT JOIN Orders AS o\n  ON c.customer_id = o.customer_id\nWHERE o.order_id IS NULL;",
-                    "explanation": "By filtering for IS NULL on the right table's column, you find all customers that have no orders at all. This is a common pattern."
+                    "explanation": "En filtrant sur IS NULL de la colonne de la table de droite, vous trouvez tous les clients qui n'ont aucune commande. C'est un modèle très courant."
                 }
             ]
         },
         {
             "id": "right-join",
             "name": "RIGHT JOIN",
-            "explanation": "RIGHT JOIN is the opposite of LEFT JOIN — it returns ALL rows from the right table and matching rows from the left table. If there is no match in the left table, NULL fills those columns. Less common than LEFT JOIN (you can usually rewrite it as a LEFT JOIN by swapping the tables).",
-            "syntax": "SELECT t1.col, t2.col\nFROM table1 AS t1\nRIGHT JOIN table2 AS t2\n  ON t1.common_col = t2.common_col;",
+            "explanation": "RIGHT JOIN est l'inverse du LEFT JOIN — il renvoie TOUTES les lignes de la table de droite et les lignes correspondantes de la table de gauche. S'il n'y a pas de correspondance dans la table de gauche, ces colonnes prennent NULL. Moins courant que LEFT JOIN (on peut souvent le réécrire en LEFT JOIN en inversant les tables).",
+            "syntax": "SELECT t1.col, t2.col\nFROM table1 AS t1\nRIGHT JOIN table2 AS t2\n  ON t1.colonne_commune = t2.colonne_commune;",
             "examples": [
                 {
-                    "title": "All orders, with customer info if available",
-                    "code": "SELECT\n  o.order_id,\n  o.total,\n  c.name AS customer_name\nFROM Customers AS c\nRIGHT JOIN Orders AS o\n  ON c.customer_id = o.customer_id;",
-                    "explanation": "All orders are shown. If an order has no matching customer (orphaned record), customer_name will be NULL."
+                    "title": "Toutes les commandes, avec les infos client si disponibles",
+                    "code": "SELECT\n  o.order_id,\n  o.total,\n  c.name AS nom_client\nFROM Customers AS c\nRIGHT JOIN Orders AS o\n  ON c.customer_id = o.customer_id;",
+                    "explanation": "Toutes les commandes sont affichées. Si une commande n'a pas de client correspondant (enregistrement orphelin), nom_client sera NULL."
                 }
             ]
         },
         {
             "id": "full-outer-join",
             "name": "FULL OUTER JOIN",
-            "explanation": "FULL OUTER JOIN returns all rows from both tables. Where there is a match, the row is combined. Where there is no match on either side, NULLs fill the missing columns. Not supported in MySQL — use a UNION of LEFT and RIGHT JOIN instead.",
-            "syntax": "-- PostgreSQL / SQL Server:\nSELECT t1.col, t2.col\nFROM table1 AS t1\nFULL OUTER JOIN table2 AS t2\n  ON t1.common_col = t2.common_col;\n\n-- MySQL workaround:\nSELECT * FROM t1 LEFT JOIN t2 ON t1.id = t2.id\nUNION\nSELECT * FROM t1 RIGHT JOIN t2 ON t1.id = t2.id;",
+            "explanation": "FULL OUTER JOIN renvoie toutes les lignes des deux tables. Quand il y a une correspondance, la ligne est combinée. Quand il n'y a pas de correspondance d'un côté, les colonnes manquantes prennent NULL. Non supporté en MySQL — utilisez une UNION de LEFT JOIN et RIGHT JOIN à la place.",
+            "syntax": "-- PostgreSQL / SQL Server :\nSELECT t1.col, t2.col\nFROM table1 AS t1\nFULL OUTER JOIN table2 AS t2\n  ON t1.colonne_commune = t2.colonne_commune;\n\n-- Contournement MySQL :\nSELECT * FROM t1 LEFT JOIN t2 ON t1.id = t2.id\nUNION\nSELECT * FROM t1 RIGHT JOIN t2 ON t1.id = t2.id;",
             "examples": [
                 {
-                    "title": "All customers and all orders (matched or not)",
-                    "code": "SELECT\n  c.name     AS customer_name,\n  o.order_id,\n  o.total\nFROM Customers AS c\nFULL OUTER JOIN Orders AS o\n  ON c.customer_id = o.customer_id;",
-                    "explanation": "Customers without orders show NULL for order columns. Orders without customers show NULL for the customer name. All records from both tables appear."
+                    "title": "Tous les clients et toutes les commandes (correspondance ou non)",
+                    "code": "SELECT\n  c.name     AS nom_client,\n  o.order_id,\n  o.total\nFROM Customers AS c\nFULL OUTER JOIN Orders AS o\n  ON c.customer_id = o.customer_id;",
+                    "explanation": "Les clients sans commande affichent NULL pour les colonnes de commande. Les commandes sans client affichent NULL pour le nom du client. Tous les enregistrements des deux tables apparaissent."
                 }
             ]
         },
         {
             "id": "subqueries",
-            "name": "Subqueries",
-            "explanation": "A subquery is a SELECT statement nested inside another SQL statement. It runs first and its result is used by the outer query. Subqueries can appear in WHERE, FROM, or SELECT clauses. They are powerful for filtering, comparing, and computing derived data.",
-            "syntax": "-- In WHERE:\nSELECT * FROM table WHERE col = (SELECT ...)\n\n-- In FROM (derived table):\nSELECT * FROM (SELECT ... FROM table) AS alias\n\n-- In SELECT (scalar subquery):\nSELECT col, (SELECT COUNT(*) FROM ...) AS total FROM table",
+            "name": "Sous-requêtes",
+            "explanation": "Une sous-requête est une instruction SELECT imbriquée dans une autre instruction SQL. Elle s'exécute en premier et son résultat est utilisé par la requête extérieure. Les sous-requêtes peuvent apparaître dans WHERE, FROM ou SELECT. Elles sont puissantes pour filtrer, comparer et calculer des données dérivées.",
+            "syntax": "-- Dans WHERE :\nSELECT * FROM table WHERE col = (SELECT ...)\n\n-- Dans FROM (table dérivée) :\nSELECT * FROM (SELECT ... FROM table) AS alias\n\n-- Dans SELECT (sous-requête scalaire) :\nSELECT col, (SELECT COUNT(*) FROM ...) AS total FROM table",
             "examples": [
                 {
-                    "title": "Find students older than the average age",
+                    "title": "Trouver les étudiants plus âgés que la moyenne",
                     "code": "SELECT name, age\nFROM Students\nWHERE age > (SELECT AVG(age) FROM Students);",
-                    "explanation": "The subquery calculates the average age first. The outer query then uses that value to filter students. The subquery returns a single value (scalar subquery)."
+                    "explanation": "La sous-requête calcule d'abord l'âge moyen. La requête extérieure utilise ensuite cette valeur pour filtrer les étudiants. La sous-requête renvoie une seule valeur (sous-requête scalaire)."
                 },
                 {
-                    "title": "Find products never ordered",
+                    "title": "Trouver les produits jamais commandés",
                     "code": "SELECT product_name\nFROM Products\nWHERE product_id NOT IN (\n  SELECT DISTINCT product_id FROM OrderItems\n);",
-                    "explanation": "The subquery returns all product_ids that appear in OrderItems. The outer query returns products whose ID does NOT appear in that list."
+                    "explanation": "La sous-requête renvoie tous les product_id présents dans OrderItems. La requête extérieure renvoie les produits dont l'ID N'apparaît PAS dans cette liste."
                 },
                 {
-                    "title": "Subquery in FROM clause (derived table)",
-                    "code": "SELECT department, avg_salary\nFROM (\n  SELECT department, AVG(salary) AS avg_salary\n  FROM Employees\n  GROUP BY department\n) AS dept_stats\nWHERE avg_salary > 4000;",
-                    "explanation": "The subquery in FROM creates a temporary result set (named 'dept_stats'). The outer query then filters that derived table."
+                    "title": "Sous-requête dans la clause FROM (table dérivée)",
+                    "code": "SELECT department, salaire_moyen\nFROM (\n  SELECT department, AVG(salary) AS salaire_moyen\n  FROM Employees\n  GROUP BY department\n) AS stats_dept\nWHERE salaire_moyen > 4000;",
+                    "explanation": "La sous-requête dans FROM crée un ensemble de résultats temporaire (nommé 'stats_dept'). La requête extérieure filtre ensuite cette table dérivée."
                 },
                 {
-                    "title": "Scalar subquery in SELECT",
-                    "code": "SELECT\n  name,\n  salary,\n  (SELECT AVG(salary) FROM Employees) AS company_avg,\n  salary - (SELECT AVG(salary) FROM Employees) AS diff_from_avg\nFROM Employees;",
-                    "explanation": "Adds the company average salary as a column next to each employee, and shows the difference. The subquery runs once per row."
+                    "title": "Sous-requête scalaire dans SELECT",
+                    "code": "SELECT\n  name,\n  salary,\n  (SELECT AVG(salary) FROM Employees) AS moyenne_entreprise,\n  salary - (SELECT AVG(salary) FROM Employees) AS ecart_moyenne\nFROM Employees;",
+                    "explanation": "Ajoute le salaire moyen de l'entreprise comme colonne à côté de chaque employé, et affiche l'écart. La sous-requête s'exécute une fois par ligne."
                 }
             ]
         }

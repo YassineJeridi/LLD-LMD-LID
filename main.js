@@ -269,9 +269,8 @@ function renderSectionCard(catId, section, num) {
         : '';
 
     const examplesHtml = section.examples && section.examples.length
-        < div class="examples-label" > Exemples</div >
-            ${
-                section.examples.map((ex, i) => `
+        ? `<div class="examples-label">Exemples</div>
+       ${section.examples.map((ex, i) => `
          <div class="example-block">
            <div class="example-title">
              <span class="example-num">${i + 1}</span>
@@ -285,12 +284,11 @@ function renderSectionCard(catId, section, num) {
              </button>
              <div class="example-explanation">${escHtml(ex.explanation)}</div>
            </div>
-         </div>`).join('')
-    } `
+         </div>`).join('')}`
         : '';
 
     return `
-        < div class="section-card" id = "section-${catId}-${section.id}" >
+    <div class="section-card" id="section-${catId}-${section.id}">
       <div class="section-card-header" data-cat="${catId}" data-section="${section.id}">
         <div class="section-number">${num}</div>
         <h3>${escHtml(section.name)}</h3>
@@ -306,7 +304,7 @@ function renderSectionCard(catId, section, num) {
         ${syntaxHtml}
         ${examplesHtml}
       </div>
-    </div > `;
+    </div>`;
 }
 
 function bindSectionCards(catId) {
@@ -315,7 +313,7 @@ function bindSectionCards(catId) {
         header.addEventListener('click', e => {
             if (e.target.closest('.section-done-btn')) return;
             const sId = header.dataset.section;
-            const body = $(`body - ${ catId } -${ sId } `);
+            const body = $(`body-${catId}-${sId}`);
             const arrow = header.querySelector('.section-card-toggle');
             body.classList.toggle('open');
             arrow.classList.toggle('open');
@@ -347,9 +345,9 @@ function navigateTo(catId, sectionId) {
 
     // Open the card and scroll to it
     setTimeout(() => {
-        const card = $(`section - ${ catId } -${ sectionId } `);
+        const card = $(`section-${catId}-${sectionId}`);
         if (!card) return;
-        const body = $(`body - ${ catId } -${ sectionId } `);
+        const body = $(`body-${catId}-${sectionId}`);
         const arrow = card.querySelector('.section-card-toggle');
         if (body && !body.classList.contains('open')) {
             body.classList.add('open');
@@ -363,7 +361,7 @@ function navigateTo(catId, sectionId) {
 // PROGRESS TRACKING
 // ═══════════════════════════════════════════════════════════
 function progressKey(catId, sectionId) {
-    return `${ catId } -${ sectionId } `;
+    return `${catId} -${sectionId} `;
 }
 
 function loadProgress() {
@@ -406,7 +404,7 @@ function toggleDone(catId, sectionId) {
             if (fill) fill.style.width = pct + '%';
             // Update meta text
             const spans = banner.querySelectorAll('.category-banner-meta span');
-            if (spans[2]) spans[2].textContent = `${ done } terminés`;
+            if (spans[2]) spans[2].textContent = `${done} terminés`;
         }
     }
 }
@@ -419,7 +417,7 @@ function updateProgressBadge() {
             if (progress[progressKey(cat.id, s.id)]) done++;
         });
     });
-    el.progressText.textContent = `${ done } / ${total}`;
+    el.progressText.textContent = `${done} / ${total}`;
 }
 
 // ═══════════════════════════════════════════════════════════

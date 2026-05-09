@@ -2,153 +2,153 @@
     "id": "lmd",
     "title": "LMD — Langage de Manipulation de Données",
     "subtitle": "Data Manipulation Language (DML)",
-    "description": "LMD (DML) contains the SQL commands used to manage the data inside tables. Unlike LDD which changes the structure, LMD deals with the actual rows: adding new data, updating existing data, and removing data. These are the commands you'll use most often in day-to-day database work.",
+    "description": "Le LMD (DML) regroupe les commandes SQL utilisées pour gérer les données à l'intérieur des tables. Contrairement au LDD qui modifie la structure, le LMD agit sur les lignes elles-mêmes : ajouter de nouvelles données, mettre à jour des données existantes et supprimer des données. Ce sont les commandes les plus utilisées au quotidien.",
     "sections": [
         {
             "id": "insert-single",
-            "name": "INSERT INTO — Single Row",
-            "explanation": "INSERT INTO adds a new row into a table. You specify the table name, the columns you want to fill, and the corresponding values. The order of values must match the order of columns listed.",
-            "syntax": "INSERT INTO table_name (column1, column2, ...)\nVALUES (value1, value2, ...);",
+            "name": "INSERT INTO — Une seule ligne",
+            "explanation": "INSERT INTO ajoute une nouvelle ligne dans une table. Vous précisez le nom de la table, les colonnes à renseigner et les valeurs correspondantes. L'ordre des valeurs doit correspondre à l'ordre des colonnes indiquées.",
+            "syntax": "INSERT INTO nom_table (colonne1, colonne2, ...)\nVALUES (valeur1, valeur2, ...);",
             "examples": [
                 {
-                    "title": "Insert one student",
+                    "title": "Insérer un étudiant",
                     "code": "INSERT INTO Students (id, name, age, email)\nVALUES (1, 'Alice Martin', 22, 'alice@example.com');",
-                    "explanation": "Adds a single row to the Students table. The values are matched to the columns in order: id=1, name='Alice Martin', age=22, email='alice@example.com'."
+                    "explanation": "Ajoute une seule ligne dans la table Students. Les valeurs sont associées aux colonnes dans l'ordre : id=1, name='Alice Martin', age=22, email='alice@example.com'."
                 },
                 {
-                    "title": "Insert without specifying columns (not recommended)",
+                    "title": "Insérer sans préciser les colonnes (déconseillé)",
                     "code": "INSERT INTO Students\nVALUES (2, 'Bob Smith', 25, 'bob@example.com');",
-                    "explanation": "You can omit the column list if you provide values for every column in the exact order they were defined. This is fragile — if the table structure changes, the query breaks. Always name your columns."
+                    "explanation": "Vous pouvez omettre la liste des colonnes si vous fournissez des valeurs pour chaque colonne dans l'ordre exact où elles ont été définies. C'est fragile — si la structure de la table change, la requête plantera. Nommez toujours vos colonnes."
                 },
                 {
-                    "title": "Insert with some columns omitted (using defaults/NULL)",
+                    "title": "Insérer en omettant certaines colonnes (valeurs par défaut / NULL)",
                     "code": "INSERT INTO Employees (emp_id, full_name, salary)\nVALUES (101, 'Claire Dupont', 3500.00);",
-                    "explanation": "If 'hire_date' was not included and has no DEFAULT, it will be NULL. Columns with DEFAULT values will use their defaults automatically."
+                    "explanation": "Si 'hire_date' n'est pas inclus et n'a pas de DEFAULT, il sera NULL. Les colonnes ayant une valeur DEFAULT utiliseront automatiquement cette valeur."
                 }
             ]
         },
         {
             "id": "insert-multiple",
-            "name": "INSERT INTO — Multiple Rows",
-            "explanation": "You can insert multiple rows in a single INSERT statement by separating each set of values with a comma. This is much more efficient than running one INSERT per row.",
-            "syntax": "INSERT INTO table_name (column1, column2, ...)\nVALUES\n  (value1a, value2a, ...),\n  (value1b, value2b, ...),\n  (value1c, value2c, ...);",
+            "name": "INSERT INTO — Plusieurs lignes",
+            "explanation": "Vous pouvez insérer plusieurs lignes dans une seule instruction INSERT en séparant chaque ensemble de valeurs par une virgule. C'est beaucoup plus efficace que d'exécuter un INSERT par ligne.",
+            "syntax": "INSERT INTO nom_table (colonne1, colonne2, ...)\nVALUES\n  (valeur1a, valeur2a, ...),\n  (valeur1b, valeur2b, ...),\n  (valeur1c, valeur2c, ...);",
             "examples": [
                 {
-                    "title": "Insert multiple students at once",
+                    "title": "Insérer plusieurs étudiants en une fois",
                     "code": "INSERT INTO Students (id, name, age, email)\nVALUES\n  (3, 'Diana Prince', 20, 'diana@example.com'),\n  (4, 'Ethan Hunt',   28, 'ethan@example.com'),\n  (5, 'Fiona Green',  23, 'fiona@example.com');",
-                    "explanation": "Three rows are inserted in one statement. Much faster than three separate INSERT statements, especially for large datasets."
+                    "explanation": "Trois lignes sont insérées en une seule instruction. Beaucoup plus rapide que trois INSERT séparés, surtout pour de grands volumes de données."
                 },
                 {
-                    "title": "Insert multiple products",
+                    "title": "Insérer plusieurs produits",
                     "code": "INSERT INTO Products (product_id, product_name, price, stock)\nVALUES\n  (1, 'Laptop',     999.99, 50),\n  (2, 'Mouse',       19.99, 200),\n  (3, 'Keyboard',    49.99, 150),\n  (4, 'Monitor',    299.99, 75);",
-                    "explanation": "Inserts 4 products in one shot. Note that if any single row violates a constraint, the entire statement fails."
+                    "explanation": "Insère 4 produits en une seule fois. Notez que si une seule ligne viole une contrainte, toute l'instruction échoue."
                 }
             ]
         },
         {
             "id": "insert-from-select",
-            "name": "INSERT INTO — From SELECT",
-            "explanation": "You can populate a table with data from another table using INSERT INTO ... SELECT. This is useful for copying data, creating backups, or transforming data between tables.",
-            "syntax": "INSERT INTO target_table (column1, column2, ...)\nSELECT column1, column2, ...\nFROM source_table\n[WHERE condition];",
+            "name": "INSERT INTO — Depuis un SELECT",
+            "explanation": "Vous pouvez alimenter une table avec des données provenant d'une autre table via INSERT INTO ... SELECT. Utile pour copier des données, créer des sauvegardes ou transformer des données entre tables.",
+            "syntax": "INSERT INTO table_cible (colonne1, colonne2, ...)\nSELECT colonne1, colonne2, ...\nFROM table_source\n[WHERE condition];",
             "examples": [
                 {
-                    "title": "Copy all students into an archive table",
+                    "title": "Copier tous les étudiants dans une table d'archive",
                     "code": "INSERT INTO Students_Archive (id, name, age, email)\nSELECT id, name, age, email\nFROM Students;",
-                    "explanation": "All rows from Students are copied into Students_Archive. The target table must already exist with matching columns."
+                    "explanation": "Toutes les lignes de Students sont copiées dans Students_Archive. La table cible doit déjà exister avec des colonnes compatibles."
                 },
                 {
-                    "title": "Copy only students older than 21",
+                    "title": "Copier uniquement les étudiants de plus de 21 ans",
                     "code": "INSERT INTO Senior_Students (id, name, age)\nSELECT id, name, age\nFROM Students\nWHERE age > 21;",
-                    "explanation": "Only rows where age > 21 are copied. The WHERE clause filters which rows get inserted."
+                    "explanation": "Seules les lignes où age > 21 sont copiées. La clause WHERE filtre les lignes à insérer."
                 },
                 {
-                    "title": "Copy employees from one department to another table",
+                    "title": "Copier les employés d'un département dans une autre table",
                     "code": "INSERT INTO IT_Staff (emp_id, full_name, salary)\nSELECT emp_id, full_name, salary\nFROM Employees\nWHERE department = 'IT';",
-                    "explanation": "Extracts only IT department employees and inserts them into a separate IT_Staff table."
+                    "explanation": "Extrait uniquement les employés du département IT et les insère dans une table IT_Staff séparée."
                 }
             ]
         },
         {
             "id": "update",
             "name": "UPDATE",
-            "explanation": "UPDATE modifies existing rows in a table. You specify which table to update, which columns to change, and what the new values should be. ALWAYS use a WHERE clause — without it, every single row in the table gets updated.",
-            "syntax": "UPDATE table_name\nSET column1 = value1, column2 = value2, ...\nWHERE condition;",
+            "explanation": "UPDATE modifie des lignes existantes dans une table. Vous précisez quelle table mettre à jour, quelles colonnes modifier et les nouvelles valeurs. Utilisez TOUJOURS une clause WHERE — sans elle, chaque ligne de la table sera modifiée.",
+            "syntax": "UPDATE nom_table\nSET colonne1 = valeur1, colonne2 = valeur2, ...\nWHERE condition;",
             "examples": [
                 {
-                    "title": "Update a single student's email",
+                    "title": "Mettre à jour l'e-mail d'un étudiant",
                     "code": "UPDATE Students\nSET email = 'alice.new@example.com'\nWHERE id = 1;",
-                    "explanation": "Only the row where id = 1 is updated. Alice's email is changed to the new address."
+                    "explanation": "Seule la ligne où id = 1 est modifiée. L'e-mail d'Alice est changé pour la nouvelle adresse."
                 },
                 {
-                    "title": "Update multiple columns at once",
+                    "title": "Mettre à jour plusieurs colonnes en une fois",
                     "code": "UPDATE Employees\nSET salary = 4200.00,\n    department = 'Engineering'\nWHERE emp_id = 101;",
-                    "explanation": "Both salary and department are updated in a single statement for employee 101."
+                    "explanation": "Le salaire et le département sont mis à jour en une seule instruction pour l'employé 101."
                 },
                 {
-                    "title": "Give all employees in a department a raise",
+                    "title": "Accorder une augmentation à tous les employés d'un département",
                     "code": "UPDATE Employees\nSET salary = salary * 1.10\nWHERE department = 'Sales';",
-                    "explanation": "All Sales employees get a 10% raise. The new salary is calculated from the current salary value."
+                    "explanation": "Tous les employés du département Sales reçoivent une augmentation de 10 %. Le nouveau salaire est calculé à partir du salaire actuel."
                 },
                 {
-                    "title": "Update using a subquery",
+                    "title": "Mettre à jour avec une sous-requête",
                     "code": "UPDATE Products\nSET price = price * 0.90\nWHERE product_id IN (\n  SELECT product_id FROM Promotions WHERE active = 1\n);",
-                    "explanation": "Applies a 10% discount to all products that appear in the active promotions list. The subquery identifies which product_ids to update."
+                    "explanation": "Applique une remise de 10 % à tous les produits figurant dans la liste des promotions actives. La sous-requête identifie les product_id à mettre à jour."
                 },
                 {
-                    "title": "DANGER — Update without WHERE (affects all rows)",
-                    "code": "-- WARNING: This updates EVERY row in the table!\nUPDATE Students\nSET age = 0;\n\n-- Always add a WHERE clause:\nUPDATE Students\nSET age = 0\nWHERE id = 5;",
-                    "explanation": "Without WHERE, every student's age is set to 0. This is almost never what you want. Always double-check your WHERE clause before running an UPDATE."
+                    "title": "DANGER — UPDATE sans WHERE (affecte toutes les lignes)",
+                    "code": "-- ATTENTION : Ceci met à jour TOUTES les lignes de la table !\nUPDATE Students\nSET age = 0;\n\n-- Ajoutez toujours une clause WHERE :\nUPDATE Students\nSET age = 0\nWHERE id = 5;",
+                    "explanation": "Sans WHERE, l'âge de chaque étudiant est mis à 0. C'est presque jamais ce que vous voulez. Vérifiez toujours votre clause WHERE avant d'exécuter un UPDATE."
                 }
             ]
         },
         {
             "id": "delete",
             "name": "DELETE",
-            "explanation": "DELETE removes specific rows from a table. Like UPDATE, always use a WHERE clause — without it, ALL rows in the table are deleted. DELETE removes rows but keeps the table structure (unlike DROP TABLE which removes everything).",
-            "syntax": "DELETE FROM table_name\nWHERE condition;",
+            "explanation": "DELETE supprime des lignes spécifiques d'une table. Comme UPDATE, utilisez toujours une clause WHERE — sans elle, TOUTES les lignes de la table sont supprimées. DELETE supprime les lignes mais conserve la structure de la table (contrairement à DROP TABLE qui supprime tout).",
+            "syntax": "DELETE FROM nom_table\nWHERE condition;",
             "examples": [
                 {
-                    "title": "Delete a specific student",
+                    "title": "Supprimer un étudiant spécifique",
                     "code": "DELETE FROM Students\nWHERE id = 3;",
-                    "explanation": "Only the row where id = 3 is deleted. All other rows remain untouched."
+                    "explanation": "Seule la ligne où id = 3 est supprimée. Toutes les autres lignes restent intactes."
                 },
                 {
-                    "title": "Delete all students older than 30",
+                    "title": "Supprimer tous les étudiants de plus de 30 ans",
                     "code": "DELETE FROM Students\nWHERE age > 30;",
-                    "explanation": "Removes all rows where age is greater than 30. Multiple rows can be deleted in one statement."
+                    "explanation": "Supprime toutes les lignes où l'âge est supérieur à 30. Plusieurs lignes peuvent être supprimées en une seule instruction."
                 },
                 {
-                    "title": "Delete using multiple conditions",
+                    "title": "Supprimer avec plusieurs conditions",
                     "code": "DELETE FROM Orders\nWHERE status = 'cancelled'\n  AND order_date < '2024-01-01';",
-                    "explanation": "Deletes only cancelled orders placed before January 1, 2024. Both conditions must be true."
+                    "explanation": "Supprime uniquement les commandes annulées passées avant le 1er janvier 2024. Les deux conditions doivent être vraies."
                 },
                 {
-                    "title": "Delete using a subquery",
+                    "title": "Supprimer avec une sous-requête",
                     "code": "DELETE FROM Orders\nWHERE customer_id IN (\n  SELECT customer_id FROM Customers WHERE country = 'France'\n);",
-                    "explanation": "Deletes all orders belonging to French customers. The subquery finds the relevant customer IDs."
+                    "explanation": "Supprime toutes les commandes appartenant à des clients français. La sous-requête retrouve les customer_id concernés."
                 },
                 {
-                    "title": "DANGER — Delete without WHERE (removes all rows)",
-                    "code": "-- WARNING: This deletes ALL rows!\nDELETE FROM Students;\n\n-- Always use WHERE:\nDELETE FROM Students\nWHERE id = 5;",
-                    "explanation": "Without WHERE, every row is deleted but the table itself remains. The table is now empty. Use TRUNCATE instead if that's your goal — it's faster."
+                    "title": "DANGER — DELETE sans WHERE (supprime toutes les lignes)",
+                    "code": "-- ATTENTION : Ceci supprime TOUTES les lignes !\nDELETE FROM Students;\n\n-- Utilisez toujours WHERE :\nDELETE FROM Students\nWHERE id = 5;",
+                    "explanation": "Sans WHERE, toutes les lignes sont supprimées mais la table reste. La table est maintenant vide. Utilisez TRUNCATE à la place si c'est l'effet recherché — c'est plus rapide."
                 }
             ]
         },
         {
             "id": "truncate",
             "name": "TRUNCATE",
-            "explanation": "TRUNCATE quickly removes ALL rows from a table. It is faster than DELETE without WHERE because it doesn't log individual row deletions. The table structure, columns, and constraints are preserved. TRUNCATE cannot be used with a WHERE clause — it's all or nothing.",
-            "syntax": "TRUNCATE TABLE table_name;",
+            "explanation": "TRUNCATE supprime rapidement TOUTES les lignes d'une table. C'est plus rapide que DELETE sans WHERE car il ne journalise pas les suppressions ligne par ligne. La structure, les colonnes et les contraintes de la table sont conservées. TRUNCATE ne peut pas être utilisé avec une clause WHERE — c'est tout ou rien.",
+            "syntax": "TRUNCATE TABLE nom_table;",
             "examples": [
                 {
-                    "title": "Empty a log table",
+                    "title": "Vider une table de journaux",
                     "code": "TRUNCATE TABLE ActivityLogs;",
-                    "explanation": "Removes all rows from ActivityLogs instantly. The table still exists and can accept new data. Faster than DELETE FROM ActivityLogs."
+                    "explanation": "Supprime immédiatement toutes les lignes d'ActivityLogs. La table existe toujours et peut recevoir de nouvelles données. Plus rapide que DELETE FROM ActivityLogs."
                 },
                 {
-                    "title": "TRUNCATE vs DELETE comparison",
-                    "code": "-- DELETE (slow, row-by-row, can use WHERE):\nDELETE FROM Students;\n\n-- TRUNCATE (fast, all at once, no WHERE allowed):\nTRUNCATE TABLE Students;",
-                    "explanation": "Both leave the table empty. TRUNCATE is faster for large tables. DELETE is flexible (supports WHERE and can be rolled back in a transaction in some databases). TRUNCATE usually resets AUTO_INCREMENT counters; DELETE does not."
+                    "title": "Comparaison TRUNCATE vs DELETE",
+                    "code": "-- DELETE (lent, ligne par ligne, supporte WHERE) :\nDELETE FROM Students;\n\n-- TRUNCATE (rapide, tout d'un coup, pas de WHERE) :\nTRUNCATE TABLE Students;",
+                    "explanation": "Les deux laissent la table vide. TRUNCATE est plus rapide pour les grandes tables. DELETE est flexible (supporte WHERE et peut être annulé dans une transaction dans certaines bases). TRUNCATE réinitialise généralement les compteurs AUTO_INCREMENT ; DELETE ne le fait pas."
                 }
             ]
         }
