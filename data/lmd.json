@@ -1,0 +1,156 @@
+{
+    "id": "lmd",
+    "title": "LMD — Langage de Manipulation de Données",
+    "subtitle": "Data Manipulation Language (DML)",
+    "description": "LMD (DML) contains the SQL commands used to manage the data inside tables. Unlike LDD which changes the structure, LMD deals with the actual rows: adding new data, updating existing data, and removing data. These are the commands you'll use most often in day-to-day database work.",
+    "sections": [
+        {
+            "id": "insert-single",
+            "name": "INSERT INTO — Single Row",
+            "explanation": "INSERT INTO adds a new row into a table. You specify the table name, the columns you want to fill, and the corresponding values. The order of values must match the order of columns listed.",
+            "syntax": "INSERT INTO table_name (column1, column2, ...)\nVALUES (value1, value2, ...);",
+            "examples": [
+                {
+                    "title": "Insert one student",
+                    "code": "INSERT INTO Students (id, name, age, email)\nVALUES (1, 'Alice Martin', 22, 'alice@example.com');",
+                    "explanation": "Adds a single row to the Students table. The values are matched to the columns in order: id=1, name='Alice Martin', age=22, email='alice@example.com'."
+                },
+                {
+                    "title": "Insert without specifying columns (not recommended)",
+                    "code": "INSERT INTO Students\nVALUES (2, 'Bob Smith', 25, 'bob@example.com');",
+                    "explanation": "You can omit the column list if you provide values for every column in the exact order they were defined. This is fragile — if the table structure changes, the query breaks. Always name your columns."
+                },
+                {
+                    "title": "Insert with some columns omitted (using defaults/NULL)",
+                    "code": "INSERT INTO Employees (emp_id, full_name, salary)\nVALUES (101, 'Claire Dupont', 3500.00);",
+                    "explanation": "If 'hire_date' was not included and has no DEFAULT, it will be NULL. Columns with DEFAULT values will use their defaults automatically."
+                }
+            ]
+        },
+        {
+            "id": "insert-multiple",
+            "name": "INSERT INTO — Multiple Rows",
+            "explanation": "You can insert multiple rows in a single INSERT statement by separating each set of values with a comma. This is much more efficient than running one INSERT per row.",
+            "syntax": "INSERT INTO table_name (column1, column2, ...)\nVALUES\n  (value1a, value2a, ...),\n  (value1b, value2b, ...),\n  (value1c, value2c, ...);",
+            "examples": [
+                {
+                    "title": "Insert multiple students at once",
+                    "code": "INSERT INTO Students (id, name, age, email)\nVALUES\n  (3, 'Diana Prince', 20, 'diana@example.com'),\n  (4, 'Ethan Hunt',   28, 'ethan@example.com'),\n  (5, 'Fiona Green',  23, 'fiona@example.com');",
+                    "explanation": "Three rows are inserted in one statement. Much faster than three separate INSERT statements, especially for large datasets."
+                },
+                {
+                    "title": "Insert multiple products",
+                    "code": "INSERT INTO Products (product_id, product_name, price, stock)\nVALUES\n  (1, 'Laptop',     999.99, 50),\n  (2, 'Mouse',       19.99, 200),\n  (3, 'Keyboard',    49.99, 150),\n  (4, 'Monitor',    299.99, 75);",
+                    "explanation": "Inserts 4 products in one shot. Note that if any single row violates a constraint, the entire statement fails."
+                }
+            ]
+        },
+        {
+            "id": "insert-from-select",
+            "name": "INSERT INTO — From SELECT",
+            "explanation": "You can populate a table with data from another table using INSERT INTO ... SELECT. This is useful for copying data, creating backups, or transforming data between tables.",
+            "syntax": "INSERT INTO target_table (column1, column2, ...)\nSELECT column1, column2, ...\nFROM source_table\n[WHERE condition];",
+            "examples": [
+                {
+                    "title": "Copy all students into an archive table",
+                    "code": "INSERT INTO Students_Archive (id, name, age, email)\nSELECT id, name, age, email\nFROM Students;",
+                    "explanation": "All rows from Students are copied into Students_Archive. The target table must already exist with matching columns."
+                },
+                {
+                    "title": "Copy only students older than 21",
+                    "code": "INSERT INTO Senior_Students (id, name, age)\nSELECT id, name, age\nFROM Students\nWHERE age > 21;",
+                    "explanation": "Only rows where age > 21 are copied. The WHERE clause filters which rows get inserted."
+                },
+                {
+                    "title": "Copy employees from one department to another table",
+                    "code": "INSERT INTO IT_Staff (emp_id, full_name, salary)\nSELECT emp_id, full_name, salary\nFROM Employees\nWHERE department = 'IT';",
+                    "explanation": "Extracts only IT department employees and inserts them into a separate IT_Staff table."
+                }
+            ]
+        },
+        {
+            "id": "update",
+            "name": "UPDATE",
+            "explanation": "UPDATE modifies existing rows in a table. You specify which table to update, which columns to change, and what the new values should be. ALWAYS use a WHERE clause — without it, every single row in the table gets updated.",
+            "syntax": "UPDATE table_name\nSET column1 = value1, column2 = value2, ...\nWHERE condition;",
+            "examples": [
+                {
+                    "title": "Update a single student's email",
+                    "code": "UPDATE Students\nSET email = 'alice.new@example.com'\nWHERE id = 1;",
+                    "explanation": "Only the row where id = 1 is updated. Alice's email is changed to the new address."
+                },
+                {
+                    "title": "Update multiple columns at once",
+                    "code": "UPDATE Employees\nSET salary = 4200.00,\n    department = 'Engineering'\nWHERE emp_id = 101;",
+                    "explanation": "Both salary and department are updated in a single statement for employee 101."
+                },
+                {
+                    "title": "Give all employees in a department a raise",
+                    "code": "UPDATE Employees\nSET salary = salary * 1.10\nWHERE department = 'Sales';",
+                    "explanation": "All Sales employees get a 10% raise. The new salary is calculated from the current salary value."
+                },
+                {
+                    "title": "Update using a subquery",
+                    "code": "UPDATE Products\nSET price = price * 0.90\nWHERE product_id IN (\n  SELECT product_id FROM Promotions WHERE active = 1\n);",
+                    "explanation": "Applies a 10% discount to all products that appear in the active promotions list. The subquery identifies which product_ids to update."
+                },
+                {
+                    "title": "DANGER — Update without WHERE (affects all rows)",
+                    "code": "-- WARNING: This updates EVERY row in the table!\nUPDATE Students\nSET age = 0;\n\n-- Always add a WHERE clause:\nUPDATE Students\nSET age = 0\nWHERE id = 5;",
+                    "explanation": "Without WHERE, every student's age is set to 0. This is almost never what you want. Always double-check your WHERE clause before running an UPDATE."
+                }
+            ]
+        },
+        {
+            "id": "delete",
+            "name": "DELETE",
+            "explanation": "DELETE removes specific rows from a table. Like UPDATE, always use a WHERE clause — without it, ALL rows in the table are deleted. DELETE removes rows but keeps the table structure (unlike DROP TABLE which removes everything).",
+            "syntax": "DELETE FROM table_name\nWHERE condition;",
+            "examples": [
+                {
+                    "title": "Delete a specific student",
+                    "code": "DELETE FROM Students\nWHERE id = 3;",
+                    "explanation": "Only the row where id = 3 is deleted. All other rows remain untouched."
+                },
+                {
+                    "title": "Delete all students older than 30",
+                    "code": "DELETE FROM Students\nWHERE age > 30;",
+                    "explanation": "Removes all rows where age is greater than 30. Multiple rows can be deleted in one statement."
+                },
+                {
+                    "title": "Delete using multiple conditions",
+                    "code": "DELETE FROM Orders\nWHERE status = 'cancelled'\n  AND order_date < '2024-01-01';",
+                    "explanation": "Deletes only cancelled orders placed before January 1, 2024. Both conditions must be true."
+                },
+                {
+                    "title": "Delete using a subquery",
+                    "code": "DELETE FROM Orders\nWHERE customer_id IN (\n  SELECT customer_id FROM Customers WHERE country = 'France'\n);",
+                    "explanation": "Deletes all orders belonging to French customers. The subquery finds the relevant customer IDs."
+                },
+                {
+                    "title": "DANGER — Delete without WHERE (removes all rows)",
+                    "code": "-- WARNING: This deletes ALL rows!\nDELETE FROM Students;\n\n-- Always use WHERE:\nDELETE FROM Students\nWHERE id = 5;",
+                    "explanation": "Without WHERE, every row is deleted but the table itself remains. The table is now empty. Use TRUNCATE instead if that's your goal — it's faster."
+                }
+            ]
+        },
+        {
+            "id": "truncate",
+            "name": "TRUNCATE",
+            "explanation": "TRUNCATE quickly removes ALL rows from a table. It is faster than DELETE without WHERE because it doesn't log individual row deletions. The table structure, columns, and constraints are preserved. TRUNCATE cannot be used with a WHERE clause — it's all or nothing.",
+            "syntax": "TRUNCATE TABLE table_name;",
+            "examples": [
+                {
+                    "title": "Empty a log table",
+                    "code": "TRUNCATE TABLE ActivityLogs;",
+                    "explanation": "Removes all rows from ActivityLogs instantly. The table still exists and can accept new data. Faster than DELETE FROM ActivityLogs."
+                },
+                {
+                    "title": "TRUNCATE vs DELETE comparison",
+                    "code": "-- DELETE (slow, row-by-row, can use WHERE):\nDELETE FROM Students;\n\n-- TRUNCATE (fast, all at once, no WHERE allowed):\nTRUNCATE TABLE Students;",
+                    "explanation": "Both leave the table empty. TRUNCATE is faster for large tables. DELETE is flexible (supports WHERE and can be rolled back in a transaction in some databases). TRUNCATE usually resets AUTO_INCREMENT counters; DELETE does not."
+                }
+            ]
+        }
+    ]
+}

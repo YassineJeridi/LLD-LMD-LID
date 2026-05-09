@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SQL Learning Hub</title>
+    <meta name="description" content="Apprenez le SQL interactivement — LDD, LMD et LID avec exemples et exercices." />
+    <link rel="stylesheet" href="style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet" />
+</head>
+
+<body>
+
+    <!-- ══════════════ SPLASH SCREEN ══════════════ -->
+    <div id="splash" class="splash">
+        <div class="splash-content">
+            <div class="splash-logo">
+                <span class="splash-icon">🗄️</span>
+                <h1>SQL Learning Hub</h1>
+            </div>
+            <p class="splash-subtitle">Votre guide interactif complet pour maîtriser le SQL — de zéro à l'autonomie.</p>
+            <div class="splash-cards">
+                <div class="splash-card">
+                    <span class="splash-card-icon">🏗️</span>
+                    <h3>LDD</h3>
+                    <p>Définissez et structurez votre base de données avec CREATE, ALTER, DROP et les contraintes.</p>
+                </div>
+                <div class="splash-card">
+                    <span class="splash-card-icon">✏️</span>
+                    <h3>LMD</h3>
+                    <p>Gérez vos données avec INSERT, UPDATE, DELETE et TRUNCATE.</p>
+                </div>
+                <div class="splash-card">
+                    <span class="splash-card-icon">🔍</span>
+                    <h3>LID</h3>
+                    <p>Interrogez et explorez les données avec SELECT, les JOINs, les sous-requêtes et plus encore.</p>
+                </div>
+            </div>
+            <button id="splash-start" class="btn-primary">Commencer →</button>
+        </div>
+    </div>
+
+    <!-- ══════════════ APP SHELL ══════════════ -->
+    <div id="app" class="app hidden">
+
+        <!-- TOP HEADER -->
+        <header class="header">
+            <div class="header-left">
+                <button id="menu-toggle" class="icon-btn" aria-label="Toggle sidebar">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="3" y1="6" x2="21" y2="6" />
+                        <line x1="3" y1="12" x2="21" y2="12" />
+                        <line x1="3" y1="18" x2="21" y2="18" />
+                    </svg>
+                </button>
+                <span class="header-logo">🗄️ SQL Learning Hub</span>
+            </div>
+            <div class="header-center">
+                <div class="search-wrap">
+                    <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8" />
+                        <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                    </svg>
+                    <input type="text" id="search-input" class="search-input" placeholder="Rechercher un sujet…"
+                        autocomplete="off" />
+                    <kbd class="search-kbd">⌘K</kbd>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="progress-badge" id="progress-badge" title="Your progress">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                    <span id="progress-text">0 / 0</span>
+                </div>
+                <button id="theme-toggle" class="icon-btn" aria-label="Changer le thème"
+                    title="Basculer mode clair/sombre">
+                    <svg id="theme-icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+                    </svg>
+                    <svg id="theme-icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="hidden">
+                        <circle cx="12" cy="12" r="5" />
+                        <line x1="12" y1="1" x2="12" y2="3" />
+                        <line x1="12" y1="21" x2="12" y2="23" />
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+                        <line x1="1" y1="12" x2="3" y2="12" />
+                        <line x1="21" y1="12" x2="23" y2="12" />
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+                    </svg>
+                </button>
+            </div>
+        </header>
+
+        <!-- MAIN LAYOUT -->
+        <div class="layout">
+
+            <!-- SIDEBAR -->
+            <aside id="sidebar" class="sidebar">
+                <nav class="sidebar-nav" id="sidebar-nav">
+                    <!-- Injected by JS -->
+                </nav>
+            </aside>
+
+            <!-- OVERLAY for mobile -->
+            <div id="sidebar-overlay" class="sidebar-overlay"></div>
+
+            <!-- CONTENT AREA -->
+            <main id="main-content" class="main-content">
+                <!-- Search Results -->
+                <div id="search-results" class="search-results hidden"></div>
+
+                <!-- Section Content -->
+                <div id="content-area" class="content-area">
+                    <!-- Injected by JS -->
+                </div>
+            </main>
+
+        </div><!-- /.layout -->
+
+    </div><!-- /#app -->
+
+    <!-- BACK TO TOP -->
+    <button id="back-to-top" class="back-to-top hidden" aria-label="Back to top" title="Back to top">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+            stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="18 15 12 9 6 15" />
+        </svg>
+    </button>
+
+    <script src="main.js"></script>
+</body>
+
+</html>
