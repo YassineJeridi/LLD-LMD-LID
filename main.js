@@ -380,11 +380,11 @@ function toggleDone(catId, sectionId) {
     saveProgress();
 
     // Update sidebar check
-    const check = el.sidebarNav.querySelector(`.sidebar - item - check[data - key="${key}"]`);
+    const check = el.sidebarNav.querySelector(`.sidebar-item-check[data-key="${key}"]`);
     if (check) check.classList.toggle('done', !!progress[key]);
 
     // Update card button
-    const btn = el.contentArea.querySelector(`.section - done - btn[data - cat="${catId}"][data - section="${sectionId}"]`);
+    const btn = el.contentArea.querySelector(`.section-done-btn[data-cat="${catId}"][data-section="${sectionId}"]`);
     if (btn) {
         btn.classList.toggle('done', !!progress[key]);
         btn.textContent = progress[key] ? '✓ Terminé' : 'Marquer fait';

@@ -1,8 +1,19 @@
-- remove DROP TABLE IF EXISTS TempData;
-  
-- remove 
--- PostgreSQL / SQL Server :
-ALTER TABLE nom_table
-ALTER COLUMN nom_colonne TYPE nouveau_type;
 
-there is no PostgreSQL remove anything related to PostgreSQL 
+check this one is it correct 
+ALTER TABLE Products
+ADD UNIQUE (sku);
+
+
+
+ALTER TABLE Products
+ALTER COLUMN price SET DEFAULT 9.99;
+
+
+
+ALTER TABLE Students
+MODIFY COLUMN email VARCHAR(150) NOT NULL;
+
+
+
+
+

@@ -101,42 +101,6 @@
                     "title": "Supprimer une colonne d'une table",
                     "code": "ALTER TABLE Students\nDROP COLUMN phone;",
                     "explanation": "Supprime définitivement la colonne 'phone' et toutes ses données de la table Students."
-                },
-                {
-                    "title": "Supprimer plusieurs colonnes (MySQL)",
-                    "code": "ALTER TABLE Employees\nDROP COLUMN middle_name,\nDROP COLUMN fax_number;",
-                    "explanation": "Vous pouvez enchaîner plusieurs opérations DROP COLUMN dans une seule instruction ALTER TABLE."
-                }
-            ]
-        },
-        {
-            "id": "alter-rename-column",
-            "name": "ALTER TABLE — RENAME COLUMN",
-            "explanation": "RENAME COLUMN change le nom d'une colonne existante sans affecter ses données ni son type. Disponible en MySQL 8.0+ et SQL Server.",
-            "syntax": "-- MySQL 8.0+ :\nALTER TABLE nom_table\nRENAME COLUMN ancien_nom TO nouveau_nom;\n\n-- MySQL ancien / SQL Server :\nALTER TABLE nom_table\nCHANGE ancien_nom nouveau_nom type_données;",
-            "examples": [
-                {
-                    "title": "Renommer une colonne",
-                    "code": "ALTER TABLE Students\nRENAME COLUMN name TO full_name;",
-                    "explanation": "Change le nom de la colonne de 'name' à 'full_name'. Toutes les données existantes dans la colonne sont conservées."
-                },
-                {
-                    "title": "Renommer une colonne dans un ancien MySQL avec CHANGE",
-                    "code": "ALTER TABLE Employees\nCHANGE emp_id employee_id INT;",
-                    "explanation": "Dans les anciennes versions de MySQL, CHANGE est utilisé. Vous devez répéter le type de données (INT ici) même s'il ne change pas."
-                }
-            ]
-        },
-        {
-            "id": "rename-table",
-            "name": "RENAME TABLE",
-            "explanation": "Renomme une table existante. Les données et la structure restent identiques — seul le nom de la table change. Dans SQL Server, on utilise la procédure sp_rename à la place.",
-            "syntax": "-- MySQL :\nRENAME TABLE ancien_nom TO nouveau_nom;\n\n-- SQL Server :\nEXEC sp_rename 'ancien_nom', 'nouveau_nom';",
-            "examples": [
-                {
-                    "title": "Renommer une table en MySQL",
-                    "code": "RENAME TABLE Students TO Learners;",
-                    "explanation": "La table 'Students' s'appelle désormais 'Learners'. Toutes les données et la structure restent intactes."
                 }
             ]
         },
