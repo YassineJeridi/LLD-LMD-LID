@@ -1000,6 +1000,79 @@ body {
     background: var(--bg-surface);
 }
 
+/* ─── EXAMPLE QUESTION ──────────────────────────────────── */
+.example-question {
+    background: var(--accent-light);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    color: var(--text-primary);
+    font-size: 13.5px;
+    font-style: italic;
+    font-weight: 500;
+    line-height: 1.6;
+    padding: 10px 16px;
+}
+
+/* ─── EXAMPLE OUTPUT TABLE ──────────────────────────────── */
+.example-output {
+    border-top: 1px solid var(--border-subtle);
+}
+
+.example-output-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    padding: 10px 16px 6px;
+    background: var(--bg-elevated);
+}
+
+.example-output-table-wrap {
+    overflow-x: auto;
+    padding: 0 16px 14px;
+    background: var(--bg-elevated);
+}
+
+.example-output-table {
+    border-collapse: collapse;
+    font-size: 13px;
+    font-family: var(--font-mono);
+    width: 100%;
+    min-width: 280px;
+}
+
+.example-output-table thead tr {
+    background: var(--bg-hover);
+}
+
+.example-output-table th {
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 0.3px;
+    padding: 7px 14px;
+    text-align: left;
+    border-bottom: 2px solid var(--accent);
+    white-space: nowrap;
+}
+
+.example-output-table td {
+    color: var(--text-secondary);
+    padding: 6px 14px;
+    border-bottom: 1px solid var(--border-subtle);
+    white-space: nowrap;
+}
+
+.example-output-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.example-output-table tbody tr:hover td {
+    background: var(--bg-hover);
+    color: var(--text-primary);
+}
+
 /* ─── SEARCH RESULTS ────────────────────────────────────── */
 .search-results {
     padding: 4px 0 32px;

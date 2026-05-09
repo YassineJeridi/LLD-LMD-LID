@@ -270,12 +270,28 @@ function renderSectionCard(catId, section, num) {
 
     const examplesHtml = section.examples && section.examples.length
         ? `<div class="examples-label">Exemples</div>
-       ${section.examples.map((ex, i) => `
+       ${section.examples.map((ex, i) => {
+            const outputHtml = ex.output
+                ? `<div class="example-output">
+                    <div class="example-output-label">Résultat</div>
+                    <div class="example-output-table-wrap">
+                      <table class="example-output-table">
+                        <thead><tr>${ex.output.columns.map(c => `<th>${escHtml(c)}</th>`).join('')}</tr></thead>
+                        <tbody>${ex.output.rows.map(row => `<tr>${row.map(cell => `<td>${escHtml(cell)}</td>`).join('')}</tr>`).join('')}</tbody>
+                      </table>
+                    </div>
+                  </div>`
+                : '';
+            const questionHtml = ex.question
+                ? `<div class="example-question">❓ ${escHtml(ex.question)}</div>`
+                : '';
+            return `
          <div class="example-block">
            <div class="example-title">
              <span class="example-num">${i + 1}</span>
              ${escHtml(ex.title)}
            </div>
+           ${questionHtml}
            <div class="example-code-wrap">
              <pre><code>${escHtml(ex.code)}</code></pre>
              <button class="example-copy-btn" data-code="${escHtml(ex.code)}">
@@ -284,7 +300,9 @@ function renderSectionCard(catId, section, num) {
              </button>
              <div class="example-explanation">${escHtml(ex.explanation)}</div>
            </div>
-         </div>`).join('')}`
+           ${outputHtml}
+         </div>`;
+        }).join('')}`
         : '';
 
     return `

@@ -46,29 +46,6 @@
             ]
         },
         {
-            "id": "insert-from-select",
-            "name": "INSERT INTO — Depuis un SELECT",
-            "explanation": "Vous pouvez alimenter une table avec des données provenant d'une autre table via INSERT INTO ... SELECT. Utile pour copier des données, créer des sauvegardes ou transformer des données entre tables.",
-            "syntax": "INSERT INTO table_cible (colonne1, colonne2, ...)\nSELECT colonne1, colonne2, ...\nFROM table_source\n[WHERE condition];",
-            "examples": [
-                {
-                    "title": "Copier tous les étudiants dans une table d'archive",
-                    "code": "INSERT INTO Students_Archive (id, name, age, email)\nSELECT id, name, age, email\nFROM Students;",
-                    "explanation": "Toutes les lignes de Students sont copiées dans Students_Archive. La table cible doit déjà exister avec des colonnes compatibles."
-                },
-                {
-                    "title": "Copier uniquement les étudiants de plus de 21 ans",
-                    "code": "INSERT INTO Senior_Students (id, name, age)\nSELECT id, name, age\nFROM Students\nWHERE age > 21;",
-                    "explanation": "Seules les lignes où age > 21 sont copiées. La clause WHERE filtre les lignes à insérer."
-                },
-                {
-                    "title": "Copier les employés d'un département dans une autre table",
-                    "code": "INSERT INTO IT_Staff (emp_id, full_name, salary)\nSELECT emp_id, full_name, salary\nFROM Employees\nWHERE department = 'IT';",
-                    "explanation": "Extrait uniquement les employés du département IT et les insère dans une table IT_Staff séparée."
-                }
-            ]
-        },
-        {
             "id": "update",
             "name": "UPDATE",
             "explanation": "UPDATE modifie des lignes existantes dans une table. Vous précisez quelle table mettre à jour, quelles colonnes modifier et les nouvelles valeurs. Utilisez TOUJOURS une clause WHERE — sans elle, chaque ligne de la table sera modifiée.",
@@ -131,24 +108,6 @@
                     "title": "DANGER — DELETE sans WHERE (supprime toutes les lignes)",
                     "code": "-- ATTENTION : Ceci supprime TOUTES les lignes !\nDELETE FROM Students;\n\n-- Utilisez toujours WHERE :\nDELETE FROM Students\nWHERE id = 5;",
                     "explanation": "Sans WHERE, toutes les lignes sont supprimées mais la table reste. La table est maintenant vide. Utilisez TRUNCATE à la place si c'est l'effet recherché — c'est plus rapide."
-                }
-            ]
-        },
-        {
-            "id": "truncate",
-            "name": "TRUNCATE",
-            "explanation": "TRUNCATE supprime rapidement TOUTES les lignes d'une table. C'est plus rapide que DELETE sans WHERE car il ne journalise pas les suppressions ligne par ligne. La structure, les colonnes et les contraintes de la table sont conservées. TRUNCATE ne peut pas être utilisé avec une clause WHERE — c'est tout ou rien.",
-            "syntax": "TRUNCATE TABLE nom_table;",
-            "examples": [
-                {
-                    "title": "Vider une table de journaux",
-                    "code": "TRUNCATE TABLE ActivityLogs;",
-                    "explanation": "Supprime immédiatement toutes les lignes d'ActivityLogs. La table existe toujours et peut recevoir de nouvelles données. Plus rapide que DELETE FROM ActivityLogs."
-                },
-                {
-                    "title": "Comparaison TRUNCATE vs DELETE",
-                    "code": "-- DELETE (lent, ligne par ligne, supporte WHERE) :\nDELETE FROM Students;\n\n-- TRUNCATE (rapide, tout d'un coup, pas de WHERE) :\nTRUNCATE TABLE Students;",
-                    "explanation": "Les deux laissent la table vide. TRUNCATE est plus rapide pour les grandes tables. DELETE est flexible (supporte WHERE et peut être annulé dans une transaction dans certaines bases). TRUNCATE réinitialise généralement les compteurs AUTO_INCREMENT ; DELETE ne le fait pas."
                 }
             ]
         }
