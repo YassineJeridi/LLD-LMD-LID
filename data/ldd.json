@@ -47,11 +47,6 @@
                     "title": "Supprimer une table",
                     "code": "DROP TABLE Students;",
                     "explanation": "Supprime complètement la table 'Students' et toutes ses données de façon permanente."
-                },
-                {
-                    "title": "Supprimer une table en toute sécurité (pas d'erreur si elle n'existe pas)",
-                    "code": "DROP TABLE IF EXISTS TempData;",
-                    "explanation": "IF EXISTS évite une erreur si 'TempData' n'existe pas. Pratique dans les scripts où l'existence de la table est incertaine."
                 }
             ]
         },
@@ -81,8 +76,8 @@
         {
             "id": "alter-modify-column",
             "name": "ALTER TABLE — MODIFY COLUMN",
-            "explanation": "MODIFY COLUMN (MySQL) ou ALTER COLUMN (SQL Server/PostgreSQL) modifie le type de données, la taille ou les contraintes d'une colonne existante. Attention — changer un type de données peut entraîner une perte de données si les valeurs existantes ne correspondent pas au nouveau type.",
-            "syntax": "-- MySQL :\nALTER TABLE nom_table\nMODIFY COLUMN nom_colonne nouveau_type [contrainte];\n\n-- PostgreSQL / SQL Server :\nALTER TABLE nom_table\nALTER COLUMN nom_colonne TYPE nouveau_type;",
+            "explanation": "MODIFY COLUMN modifie le type de données, la taille ou les contraintes d'une colonne existante. Attention — changer un type de données peut entraîner une perte de données si les valeurs existantes ne correspondent pas au nouveau type.",
+            "syntax": "ALTER TABLE nom_table\nMODIFY COLUMN nom_colonne nouveau_type [contrainte];",
             "examples": [
                 {
                     "title": "Augmenter la taille d'une colonne VARCHAR (MySQL)",
@@ -93,11 +88,6 @@
                     "title": "Changer le type de données d'une colonne (MySQL)",
                     "code": "ALTER TABLE Employees\nMODIFY COLUMN salary DECIMAL(12,2) NOT NULL;",
                     "explanation": "Modifie 'salary' pour autoriser des nombres plus grands (12 chiffres au total, 2 décimales) et ajoute la contrainte NOT NULL."
-                },
-                {
-                    "title": "Changer le type d'une colonne en PostgreSQL",
-                    "code": "ALTER TABLE Products\nALTER COLUMN price TYPE NUMERIC(10,2);",
-                    "explanation": "En PostgreSQL, la syntaxe utilise ALTER COLUMN ... TYPE au lieu de MODIFY COLUMN."
                 }
             ]
         },
@@ -122,8 +112,8 @@
         {
             "id": "alter-rename-column",
             "name": "ALTER TABLE — RENAME COLUMN",
-            "explanation": "RENAME COLUMN change le nom d'une colonne existante sans affecter ses données ni son type. Disponible en MySQL 8.0+, PostgreSQL et SQL Server.",
-            "syntax": "-- MySQL 8.0+ / PostgreSQL :\nALTER TABLE nom_table\nRENAME COLUMN ancien_nom TO nouveau_nom;\n\n-- MySQL ancien / SQL Server :\nALTER TABLE nom_table\nCHANGE ancien_nom nouveau_nom type_données;",
+            "explanation": "RENAME COLUMN change le nom d'une colonne existante sans affecter ses données ni son type. Disponible en MySQL 8.0+ et SQL Server.",
+            "syntax": "-- MySQL 8.0+ :\nALTER TABLE nom_table\nRENAME COLUMN ancien_nom TO nouveau_nom;\n\n-- MySQL ancien / SQL Server :\nALTER TABLE nom_table\nCHANGE ancien_nom nouveau_nom type_données;",
             "examples": [
                 {
                     "title": "Renommer une colonne",
@@ -141,17 +131,12 @@
             "id": "rename-table",
             "name": "RENAME TABLE",
             "explanation": "Renomme une table existante. Les données et la structure restent identiques — seul le nom de la table change. Dans SQL Server, on utilise la procédure sp_rename à la place.",
-            "syntax": "-- MySQL :\nRENAME TABLE ancien_nom TO nouveau_nom;\n\n-- PostgreSQL :\nALTER TABLE ancien_nom RENAME TO nouveau_nom;\n\n-- SQL Server :\nEXEC sp_rename 'ancien_nom', 'nouveau_nom';",
+            "syntax": "-- MySQL :\nRENAME TABLE ancien_nom TO nouveau_nom;\n\n-- SQL Server :\nEXEC sp_rename 'ancien_nom', 'nouveau_nom';",
             "examples": [
                 {
                     "title": "Renommer une table en MySQL",
                     "code": "RENAME TABLE Students TO Learners;",
                     "explanation": "La table 'Students' s'appelle désormais 'Learners'. Toutes les données et la structure restent intactes."
-                },
-                {
-                    "title": "Renommer une table en PostgreSQL",
-                    "code": "ALTER TABLE Employees RENAME TO Staff;",
-                    "explanation": "PostgreSQL utilise la syntaxe ALTER TABLE pour renommer les tables."
                 }
             ]
         },
