@@ -27,8 +27,8 @@
                 },
                 {
                     "title": "Créer une table avec une FOREIGN KEY",
-                    "code": "CREATE TABLE Orders (\n  order_id    INT PRIMARY KEY,\n  customer_id INT NOT NULL,\n  order_date  DATE,\n  FOREIGN KEY (customer_id) REFERENCES Customers(customer_id)\n);",
-                    "explanation": "'customer_id' dans Orders fait référence à 'customer_id' dans la table Customers. Cela garantit l'intégrité référentielle — impossible d'ajouter une commande pour un client inexistant."
+                    "code": "CREATE TABLE Orders (\n  order_id    INT PRIMARY KEY,\n  customer_id INT NOT NULL,\n  order_date  DATE,\n  CONSTRAINT fk_orders_customer FOREIGN KEY (customer_id) REFERENCES Customers(customer_id)\n);",
+                    "explanation": "'customer_id' dans Orders fait référence à 'customer_id' dans la table Customers. Cela garantit l'intégrité référentielle — impossible d'ajouter une commande pour un client inexistant. La contrainte est nommée 'fk_orders_customer' pour faciliter sa gestion ultérieure."
                 },
                 {
                     "title": "Créer une table avec une contrainte CHECK",
@@ -108,7 +108,7 @@
             "id": "constraint-primary-key",
             "name": "Contrainte — PRIMARY KEY",
             "explanation": "Une PRIMARY KEY identifie de façon unique chaque ligne d'une table. Elle doit être UNIQUE et NOT NULL. Une table ne peut avoir qu'une seule clé primaire. Elle peut porter sur une seule colonne ou sur plusieurs colonnes (clé composite).",
-            "syntax": "-- Colonne unique :\nCREATE TABLE nom_table (\n  col INT PRIMARY KEY,\n  ...\n);\n\n-- Clé composite :\nCREATE TABLE nom_table (\n  col1 INT,\n  col2 INT,\n  PRIMARY KEY (col1, col2)\n);\n\n-- Ajouter à une table existante :\nALTER TABLE nom_table ADD PRIMARY KEY (nom_colonne);",
+            "syntax": "-- Colonne unique :\nCREATE TABLE nom_table (\n  col INT PRIMARY KEY,\n  ...\n);\n\n-- Clé composite :\nCREATE TABLE nom_table (\n  col1 INT,\n  col2 INT,\n  PRIMARY KEY (col1, col2)\n);\n\n-- Ajouter à une table existante (avec nom de contrainte) :\nALTER TABLE nom_table ADD CONSTRAINT nom_contrainte PRIMARY KEY (nom_colonne);",
             "examples": [
                 {
                     "title": "Clé primaire sur une seule colonne",
@@ -122,8 +122,8 @@
                 },
                 {
                     "title": "Ajouter une clé primaire à une table existante",
-                    "code": "ALTER TABLE Products\nADD PRIMARY KEY (product_id);",
-                    "explanation": "Ajoute une contrainte de clé primaire sur la colonne 'product_id' d'une table existante."
+                    "code": "ALTER TABLE Products\nADD CONSTRAINT pk_products PRIMARY KEY (product_id);",
+                    "explanation": "Ajoute une contrainte de clé primaire nommée 'pk_products' sur la colonne 'product_id' d'une table existante. Nommer la contrainte permet de la supprimer facilement plus tard avec DROP CONSTRAINT pk_products."
                 }
             ]
         },
@@ -131,17 +131,17 @@
             "id": "constraint-foreign-key",
             "name": "Contrainte — FOREIGN KEY",
             "explanation": "Une FOREIGN KEY crée un lien entre deux tables. La valeur dans la colonne de clé étrangère doit correspondre à une valeur dans la clé primaire de la table référencée (ou être NULL). Cela garantit l'intégrité référentielle — pas d'enregistrements orphelins.",
-            "syntax": "-- Dans CREATE TABLE :\nFOREIGN KEY (colonne) REFERENCES autre_table(autre_colonne)\n\n-- Dans ALTER TABLE :\nALTER TABLE nom_table\nADD FOREIGN KEY (colonne) REFERENCES autre_table(autre_colonne);",
+            "syntax": "-- Dans CREATE TABLE (avec nom de contrainte) :\nCONSTRAINT nom_contrainte FOREIGN KEY (colonne) REFERENCES autre_table(autre_colonne)\n\n-- Dans ALTER TABLE (avec nom de contrainte) :\nALTER TABLE nom_table\nADD CONSTRAINT nom_contrainte FOREIGN KEY (colonne) REFERENCES autre_table(autre_colonne);",
             "examples": [
                 {
                     "title": "Orders référençant Customers",
-                    "code": "CREATE TABLE Customers (\n  customer_id INT PRIMARY KEY,\n  name        VARCHAR(100)\n);\n\nCREATE TABLE Orders (\n  order_id    INT PRIMARY KEY,\n  customer_id INT,\n  total       DECIMAL(10,2),\n  FOREIGN KEY (customer_id) REFERENCES Customers(customer_id)\n);",
-                    "explanation": "Chaque commande doit appartenir à un client valide. Impossible d'insérer une commande avec un customer_id qui n'existe pas dans Customers."
+                    "code": "CREATE TABLE Customers (\n  customer_id INT PRIMARY KEY,\n  name        VARCHAR(100)\n);\n\nCREATE TABLE Orders (\n  order_id    INT PRIMARY KEY,\n  customer_id INT,\n  total       DECIMAL(10,2),\n  CONSTRAINT fk_orders_customer FOREIGN KEY (customer_id) REFERENCES Customers(customer_id)\n);",
+                    "explanation": "Chaque commande doit appartenir à un client valide. Impossible d'insérer une commande avec un customer_id qui n'existe pas dans Customers. La contrainte est nommée 'fk_orders_customer' pour faciliter sa gestion ultérieure."
                 },
                 {
                     "title": "Clé étrangère avec ON DELETE CASCADE",
-                    "code": "CREATE TABLE Orders (\n  order_id    INT PRIMARY KEY,\n  customer_id INT,\n  FOREIGN KEY (customer_id)\n    REFERENCES Customers(customer_id)\n    ON DELETE CASCADE\n);",
-                    "explanation": "ON DELETE CASCADE signifie : si un Client est supprimé, toutes ses Commandes sont automatiquement supprimées aussi. Évite les commandes orphelines."
+                    "code": "CREATE TABLE Orders (\n  order_id    INT PRIMARY KEY,\n  customer_id INT,\n  CONSTRAINT fk_orders_customer FOREIGN KEY (customer_id)\n    REFERENCES Customers(customer_id)\n    ON DELETE CASCADE\n);",
+                    "explanation": "ON DELETE CASCADE signifie : si un Client est supprimé, toutes ses Commandes sont automatiquement supprimées aussi. Évite les commandes orphelines. La contrainte nommée 'fk_orders_customer' peut être supprimée ou modifiée par nom si besoin."
                 }
             ]
         },
@@ -149,7 +149,7 @@
             "id": "constraint-unique",
             "name": "Contrainte — UNIQUE",
             "explanation": "La contrainte UNIQUE garantit que toutes les valeurs d'une colonne sont différentes. Contrairement à PRIMARY KEY, une table peut avoir plusieurs colonnes UNIQUE, et les colonnes UNIQUE peuvent contenir des valeurs NULL (considérées comme distinctes).",
-            "syntax": "-- Dans la définition de la colonne :\nnom_col type_données UNIQUE\n\n-- Comme contrainte de table :\nUNIQUE (nom_colonne)\n\n-- Ajouter à une table existante :\nALTER TABLE nom_table ADD UNIQUE (nom_colonne);",
+            "syntax": "-- Dans la définition de la colonne :\nnom_col type_données UNIQUE\n\n-- Comme contrainte de table :\nUNIQUE (nom_colonne)\n\n-- Ajouter à une table existante (avec nom de contrainte) :\nALTER TABLE nom_table ADD CONSTRAINT nom_contrainte UNIQUE (nom_colonne);",
             "examples": [
                 {
                     "title": "Adresses e-mail uniques",
@@ -158,8 +158,8 @@
                 },
                 {
                     "title": "Ajouter une contrainte unique à une table existante",
-                    "code": "ALTER TABLE Products\nADD UNIQUE (sku);",
-                    "explanation": "Ajoute une contrainte UNIQUE sur la colonne 'sku' après la création de la table."
+                    "code": "ALTER TABLE Products\nADD CONSTRAINT uq_products_sku UNIQUE (sku);",
+                    "explanation": "Ajoute une contrainte UNIQUE nommée 'uq_products_sku' sur la colonne 'sku' après la création de la table. Nommer la contrainte permet de la supprimer facilement avec DROP CONSTRAINT uq_products_sku."
                 }
             ]
         },
@@ -193,9 +193,9 @@
                     "explanation": "Quand un article est inséré sans préciser le statut, il vaut 'draft' par défaut. created_at prend l'heure actuelle par défaut. views commence à 0."
                 },
                 {
-                    "title": "Ajouter une valeur par défaut à une colonne existante",
-                    "code": "ALTER TABLE Products\nALTER COLUMN price SET DEFAULT 9.99;",
-                    "explanation": "Définit un prix par défaut de 9.99 pour tout nouveau produit inséré sans prix. Les lignes existantes ne sont pas affectées."
+                    "title": "Ajouter une valeur par défaut à une colonne existante (MySQL)",
+                    "code": "ALTER TABLE Products\nALTER price SET DEFAULT 9.99;",
+                    "explanation": "Définit un prix par défaut de 9.99 pour tout nouveau produit inséré sans prix. Les lignes existantes ne sont pas affectées. Remarque : MySQL utilise ALTER sans le mot-clé COLUMN (contrairement à PostgreSQL)."
                 }
             ]
         },
