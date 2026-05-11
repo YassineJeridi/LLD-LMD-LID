@@ -45,10 +45,12 @@
     --tag-ldd: #22c55e;
     --tag-lmd: #f59e0b;
     --tag-lid: #a78bfa;
+    --tag-php: #38bdf8;
 
     --tag-ldd-bg: rgba(34, 197, 94, 0.13);
     --tag-lmd-bg: rgba(245, 158, 11, 0.13);
     --tag-lid-bg: rgba(167, 139, 250, 0.14);
+    --tag-php-bg: rgba(56, 189, 248, 0.13);
 
     --shadow-sm: 0 1px 4px rgba(0, 0, 0, 0.55);
     --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.65);
@@ -83,10 +85,12 @@
     --tag-ldd: #16a34a;
     --tag-lmd: #c27a04;
     --tag-lid: #6d28d9;
+    --tag-php: #0284c7;
 
     --tag-ldd-bg: rgba(22, 163, 74, 0.11);
     --tag-lmd-bg: rgba(194, 122, 4, 0.11);
     --tag-lid-bg: rgba(109, 40, 217, 0.10);
+    --tag-php-bg: rgba(2, 132, 199, 0.11);
 
     --shadow-sm: 0 1px 4px rgba(14, 30, 70, 0.09);
     --shadow-md: 0 4px 20px rgba(14, 30, 70, 0.13);
@@ -221,6 +225,10 @@ body {
 
 .splash-card:nth-child(3) {
     border-top: 3px solid var(--tag-lid);
+}
+
+.splash-card:nth-child(4) {
+    border-top: 3px solid var(--tag-php);
 }
 
 .splash-card-icon {
@@ -483,6 +491,11 @@ body {
     color: var(--tag-lid);
 }
 
+.sidebar-category[data-id="php"] .sidebar-category-tag {
+    background: var(--tag-php-bg);
+    color: var(--tag-php);
+}
+
 .sidebar-category-arrow {
     color: var(--text-muted);
     transition: transform var(--transition);
@@ -614,6 +627,10 @@ body {
     background: linear-gradient(90deg, var(--tag-lid), #a78bfa);
 }
 
+.category-banner[data-id="php"]::before {
+    background: linear-gradient(90deg, var(--tag-php), #7dd3fc);
+}
+
 .category-banner-header {
     display: flex;
     align-items: center;
@@ -674,6 +691,11 @@ body {
 .lid-tag {
     background: var(--tag-lid-bg);
     color: var(--tag-lid);
+}
+
+.php-tag {
+    background: var(--tag-php-bg);
+    color: var(--tag-php);
 }
 
 /* ─── SECTION CARDS ─────────────────────────────────────── */

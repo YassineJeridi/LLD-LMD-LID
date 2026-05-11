@@ -9,6 +9,7 @@ const DATA_FILES = [
     { id: 'ldd', file: 'data/ldd.json', icon: '🏗️', color: 'ldd' },
     { id: 'lmd', file: 'data/lmd.json', icon: '✏️', color: 'lmd' },
     { id: 'lid', file: 'data/lid.json', icon: '🔍', color: 'lid' },
+    { id: 'php', file: 'data/php.json', icon: '🐘', color: 'php' },
 ];
 
 const STORAGE_KEYS = {

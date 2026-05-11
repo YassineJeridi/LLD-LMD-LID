@@ -1,0 +1,154 @@
+{
+    "id": "php",
+    "title": "PHP & MySQL",
+    "subtitle": "Connexion, Requêtes et Traitement des Données",
+    "description": "PHP est un langage côté serveur qui permet d'interagir dynamiquement avec une base de données MySQL. Dans cette section, vous allez apprendre à établir une connexion, récupérer les données d'un formulaire HTML via la méthode POST, exécuter des requêtes SQL et traiter les résultats avec les fonctions mysqli.",
+    "sections": [
+        {
+            "id": "connexion",
+            "name": "Connexion à la base de données",
+            "explanation": "Avant toute interaction avec MySQL, il faut établir une connexion via la fonction mysqli_connect(). Cette fonction prend quatre paramètres : l'hôte du serveur, le nom d'utilisateur, le mot de passe et le nom de la base de données. Elle retourne un objet de connexion que vous utiliserez pour toutes les requêtes suivantes.",
+            "syntax": "mysqli_connect(host, utilisateur, mot_de_passe, base_de_donnees);",
+            "examples": [
+                {
+                    "title": "Établir une connexion à MySQL",
+                    "code": "<?php\n$host     = \"localhost\";\n$user     = \"root\";\n$password = \"\";\n$database = \"ma_base\";\n\n$conn = mysqli_connect($host, $user, $password, $database)\n    or die(\"Connexion échouée : \" . mysqli_connect_error());\n\necho \"Connexion réussie !\";\n?>",
+                    "explanation": "On définit les paramètres de connexion dans des variables, puis on appelle mysqli_connect(). Si la connexion échoue, or die() arrête le script et affiche le message d'erreur retourné par mysqli_connect_error()."
+                },
+                {
+                    "title": "Vérifier la connexion avec une condition",
+                    "code": "<?php\n$conn = mysqli_connect(\"localhost\", \"root\", \"\", \"ma_base\");\n\nif (!$conn) {\n    die(\"Erreur de connexion : \" . mysqli_connect_error());\n}\n\necho \"Connexion réussie !\";\n?>",
+                    "explanation": "On peut aussi vérifier la connexion avec un if(!$conn). mysqli_connect_error() retourne le message d'erreur de la dernière tentative de connexion échouée."
+                }
+            ]
+        },
+        {
+            "id": "post-form",
+            "name": "Méthode POST — Formulaire HTML",
+            "explanation": "La méthode POST permet d'envoyer les données d'un formulaire HTML vers un script PHP sans les afficher dans l'URL. Les données sont accessibles côté PHP via le tableau superglobal $_POST['nom_du_champ']. C'est la méthode standard pour envoyer des données sensibles comme les mots de passe ou les informations personnelles.",
+            "syntax": "$valeur = $_POST['nom_du_champ'];",
+            "examples": [
+                {
+                    "title": "Formulaire HTML avec méthode POST",
+                    "code": "<!-- formulaire.html -->\n<form action=\"traitement.php\" method=\"POST\">\n  <input type=\"text\"     name=\"nom\"   placeholder=\"Votre nom\" />\n  <input type=\"email\"    name=\"email\" placeholder=\"Votre email\" />\n  <input type=\"password\" name=\"mdp\"   placeholder=\"Mot de passe\" />\n  <button type=\"submit\">Envoyer</button>\n</form>",
+                    "explanation": "L'attribut action indique le fichier PHP qui va traiter le formulaire. L'attribut method=\"POST\" envoie les données de façon invisible dans le corps de la requête HTTP, contrairement à GET qui les expose dans l'URL."
+                },
+                {
+                    "title": "Récupérer les données POST en PHP",
+                    "code": "<?php\n// traitement.php\n$nom   = $_POST['nom'];\n$email = $_POST['email'];\n$mdp   = $_POST['mdp'];\n\necho \"Nom reçu : \"   . $nom   . \"<br>\";\necho \"Email reçu : \" . $email . \"<br>\";\n?>",
+                    "explanation": "$_POST est un tableau associatif. Chaque clé correspond à la valeur de l'attribut name d'un champ du formulaire. Les données sont disponibles dès la soumission du formulaire."
+                },
+                {
+                    "title": "Vérifier que les données POST existent",
+                    "code": "<?php\nif ($_SERVER['REQUEST_METHOD'] === 'POST') {\n    $nom   = $_POST['nom']   ?? '';\n    $email = $_POST['email'] ?? '';\n\n    echo \"Formulaire reçu — Nom : \" . $nom;\n} else {\n    echo \"Aucune donnée envoyée.\";\n}\n?>",
+                    "explanation": "On vérifie d'abord que la requête est bien de type POST via $_SERVER['REQUEST_METHOD']. L'opérateur ?? (null coalescing) retourne une chaîne vide si la clé n'existe pas dans $_POST, évitant ainsi les avertissements PHP."
+                }
+            ]
+        },
+        {
+            "id": "mysqli-query",
+            "name": "La requête SQL — mysqli_query()",
+            "explanation": "mysqli_query() exécute une requête SQL sur la base de données. La convention est de stocker la chaîne SQL dans une variable $req, puis d'exécuter la requête et de stocker le résultat dans $res. Pour les requêtes SELECT, $res contient un jeu de résultats. Pour INSERT, UPDATE et DELETE, $res vaut TRUE en cas de succès.",
+            "syntax": "$req = \"REQUÊTE SQL\";\n$res = mysqli_query($conn, $req);",
+            "examples": [
+                {
+                    "title": "Exécuter une requête SELECT",
+                    "code": "<?php\n$req = \"SELECT * FROM utilisateurs\";\n$res = mysqli_query($conn, $req)\n    or die(\"Erreur : \" . mysqli_error($conn));\n\n// $res contient maintenant le jeu de résultats\n// Utilisez mysqli_fetch_assoc() pour lire les lignes\n?>",
+                    "explanation": "$req contient la chaîne SQL. mysqli_query($conn, $req) exécute la requête sur la connexion $conn. En cas d'erreur, or die() affiche le message via mysqli_error($conn)."
+                },
+                {
+                    "title": "Insérer des données depuis un formulaire POST",
+                    "code": "<?php\n$nom   = $_POST['nom'];\n$email = $_POST['email'];\n\n$req = \"INSERT INTO utilisateurs (nom, email)\n        VALUES ('$nom', '$email')\";\n$res = mysqli_query($conn, $req)\n    or die(\"Erreur d'insertion : \" . mysqli_error($conn));\n\necho \"Utilisateur ajouté avec succès !\";\n?>",
+                    "explanation": "On construit la requête INSERT en intégrant les données reçues via $_POST dans la chaîne $req. $res vaut TRUE si l'insertion réussit."
+                },
+                {
+                    "title": "Mettre à jour un enregistrement",
+                    "code": "<?php\n$id  = $_POST['id'];\n$nom = $_POST['nom'];\n\n$req = \"UPDATE utilisateurs\n        SET nom = '$nom'\n        WHERE id = $id\";\n$res = mysqli_query($conn, $req)\n    or die(\"Erreur de mise à jour : \" . mysqli_error($conn));\n\necho \"Mise à jour effectuée.\";\n?>",
+                    "explanation": "Pour un UPDATE, $res vaut TRUE si la requête s'est exécutée sans erreur, même si aucune ligne n'a été modifiée. Pour savoir combien de lignes ont été affectées, utilisez mysqli_affected_rows()."
+                }
+            ]
+        },
+        {
+            "id": "mysqli-num-rows",
+            "name": "mysqli_num_rows()",
+            "explanation": "mysqli_num_rows() retourne le nombre de lignes dans le résultat d'une requête SELECT. Elle s'utilise après mysqli_query() et prend en paramètre le résultat $res. Cette fonction est uniquement valable pour les requêtes SELECT — pour INSERT, UPDATE et DELETE, utilisez mysqli_affected_rows().",
+            "syntax": "$nb = mysqli_num_rows($res);",
+            "examples": [
+                {
+                    "title": "Compter le nombre de résultats",
+                    "code": "<?php\n$req = \"SELECT * FROM utilisateurs\";\n$res = mysqli_query($conn, $req)\n    or die(\"Erreur : \" . mysqli_error($conn));\n\n$nb = mysqli_num_rows($res);\necho \"Nombre d'utilisateurs : \" . $nb;\n?>",
+                    "explanation": "mysqli_num_rows($res) parcourt le résultat et retourne le nombre de lignes trouvées. Ici, on affiche le nombre total d'utilisateurs dans la table."
+                },
+                {
+                    "title": "Vérifier si un résultat existe avant de le lire",
+                    "code": "<?php\n$req = \"SELECT * FROM utilisateurs WHERE email = 'alice@exemple.com'\";\n$res = mysqli_query($conn, $req)\n    or die(\"Erreur : \" . mysqli_error($conn));\n\nif (mysqli_num_rows($res) > 0) {\n    $ligne = mysqli_fetch_assoc($res);\n    echo \"Trouvé : \" . $ligne['nom'];\n} else {\n    echo \"Aucun utilisateur trouvé.\";\n}\n?>",
+                    "explanation": "Un pattern courant : on exécute la requête, puis on utilise mysqli_num_rows() pour vérifier qu'au moins un résultat existe avant d'appeler mysqli_fetch_assoc(). Cela évite de lire un résultat vide."
+                }
+            ]
+        },
+        {
+            "id": "mysqli-affected-rows",
+            "name": "mysqli_affected_rows()",
+            "explanation": "mysqli_affected_rows() retourne le nombre de lignes affectées par la dernière requête INSERT, UPDATE, DELETE ou REPLACE. Elle prend en paramètre la connexion $conn (et non $res). Une valeur de 0 signifie qu'aucune ligne n'a été modifiée, -1 indique une erreur.",
+            "syntax": "$nb = mysqli_affected_rows($conn);",
+            "examples": [
+                {
+                    "title": "Compter les lignes supprimées",
+                    "code": "<?php\n$req = \"DELETE FROM utilisateurs WHERE statut = 'inactif'\";\n$res = mysqli_query($conn, $req)\n    or die(\"Erreur : \" . mysqli_error($conn));\n\n$nb = mysqli_affected_rows($conn);\necho $nb . \" utilisateur(s) supprimé(s).\";\n?>",
+                    "explanation": "Après un DELETE, mysqli_affected_rows($conn) indique combien de lignes ont réellement été supprimées. Notez que le paramètre est $conn (la connexion), pas $res."
+                },
+                {
+                    "title": "Vérifier si un UPDATE a modifié des données",
+                    "code": "<?php\n$req = \"UPDATE utilisateurs SET nom = 'Bob' WHERE id = 99\";\n$res = mysqli_query($conn, $req)\n    or die(\"Erreur : \" . mysqli_error($conn));\n\nif (mysqli_affected_rows($conn) > 0) {\n    echo \"Mise à jour réussie.\";\n} else {\n    echo \"Aucune ligne modifiée (id introuvable ?).\";\n}\n?>",
+                    "explanation": "Un UPDATE peut réussir sans modifier de lignes si la condition WHERE ne correspond à aucun enregistrement. mysqli_affected_rows() permet de distinguer ce cas : requête valide mais aucune ligne concernée."
+                }
+            ]
+        },
+        {
+            "id": "mysqli-fetch",
+            "name": "mysqli_fetch_row / fetch_array / fetch_assoc",
+            "explanation": "Les fonctions mysqli_fetch_* permettent de lire ligne par ligne le résultat d'une requête SELECT stocké dans $res. Chaque appel avance d'une ligne et retourne un tableau. On les utilise généralement dans une boucle while. Les trois variantes diffèrent par la façon dont elles indexent les colonnes : par index numérique (fetch_row), par nom de colonne (fetch_assoc), ou les deux (fetch_array).",
+            "syntax": "// Accès par nom de colonne (recommandé) :\n$ligne = mysqli_fetch_assoc($res);\n\n// Accès par index numérique :\n$ligne = mysqli_fetch_row($res);\n\n// Accès par nom ET par index :\n$ligne = mysqli_fetch_array($res);",
+            "examples": [
+                {
+                    "title": "mysqli_fetch_assoc() — accès par nom de colonne",
+                    "code": "<?php\n$req = \"SELECT id, nom, email FROM utilisateurs\";\n$res = mysqli_query($conn, $req)\n    or die(\"Erreur : \" . mysqli_error($conn));\n\nwhile ($ligne = mysqli_fetch_assoc($res)) {\n    echo $ligne['id']    . \" — \";\n    echo $ligne['nom']   . \" — \";\n    echo $ligne['email'] . \"<br>\";\n}\n?>",
+                    "explanation": "mysqli_fetch_assoc() retourne chaque ligne sous forme de tableau associatif où les clés sont les noms des colonnes. C'est la méthode la plus lisible et la plus recommandée pour accéder aux données."
+                },
+                {
+                    "title": "mysqli_fetch_row() — accès par index numérique",
+                    "code": "<?php\n$req = \"SELECT id, nom, email FROM utilisateurs\";\n$res = mysqli_query($conn, $req)\n    or die(\"Erreur : \" . mysqli_error($conn));\n\nwhile ($ligne = mysqli_fetch_row($res)) {\n    echo $ligne[0] . \" — \"; // id\n    echo $ligne[1] . \" — \"; // nom\n    echo $ligne[2] . \"<br>\"; // email\n}\n?>",
+                    "explanation": "mysqli_fetch_row() retourne un tableau indexé numériquement. $ligne[0] correspond à la première colonne du SELECT, $ligne[1] à la deuxième, etc. L'ordre dépend de l'ordre des colonnes dans la requête."
+                },
+                {
+                    "title": "mysqli_fetch_array() — accès mixte",
+                    "code": "<?php\n$req = \"SELECT id, nom FROM utilisateurs\";\n$res = mysqli_query($conn, $req)\n    or die(\"Erreur : \" . mysqli_error($conn));\n\nwhile ($ligne = mysqli_fetch_array($res)) {\n    echo $ligne[0]     . \" = \"; // accès par index\n    echo $ligne['nom'] . \"<br>\"; // accès par nom\n}\n?>",
+                    "explanation": "mysqli_fetch_array() combine les deux modes : chaque valeur est accessible par son index numérique ET par le nom de la colonne. Pratique, mais consomme plus de mémoire que fetch_assoc ou fetch_row car chaque valeur est stockée deux fois."
+                }
+            ]
+        },
+        {
+            "id": "or-die",
+            "name": "or die()",
+            "explanation": "or die() est une construction PHP qui interrompt immédiatement l'exécution du script et affiche un message si l'opération précédente retourne FALSE. C'est un raccourci pour gérer les erreurs critiques comme une connexion échouée ou une requête SQL invalide. Le message passé à die() est affiché dans la page.",
+            "syntax": "operation() or die(\"Message d'erreur\");",
+            "examples": [
+                {
+                    "title": "or die() sur une connexion",
+                    "code": "<?php\n$conn = mysqli_connect(\"localhost\", \"root\", \"\", \"ma_base\")\n    or die(\"Impossible de se connecter : \" . mysqli_connect_error());\n?>",
+                    "explanation": "Si mysqli_connect() retourne FALSE (échec de connexion), die() arrête le script et affiche le message avec le détail de l'erreur fourni par mysqli_connect_error()."
+                },
+                {
+                    "title": "or die() sur une requête SQL",
+                    "code": "<?php\n$req = \"SELECT * FROM utilisateurs\";\n$res = mysqli_query($conn, $req)\n    or die(\"Erreur de requête : \" . mysqli_error($conn));\n?>",
+                    "explanation": "Si mysqli_query() échoue (table inexistante, syntaxe SQL invalide…), die() affiche l'erreur retournée par mysqli_error($conn) et stoppe le script."
+                },
+                {
+                    "title": "Exemple complet — connexion, requête et lecture",
+                    "code": "<?php\n$conn = mysqli_connect(\"localhost\", \"root\", \"\", \"ma_base\")\n    or die(\"Connexion échouée : \" . mysqli_connect_error());\n\n$req = \"SELECT id, nom FROM clients WHERE actif = 1\";\n$res = mysqli_query($conn, $req)\n    or die(\"Requête échouée : \" . mysqli_error($conn));\n\nwhile ($ligne = mysqli_fetch_assoc($res)) {\n    echo $ligne['id'] . \" — \" . $ligne['nom'] . \"<br>\";\n}\n?>",
+                    "explanation": "Exemple complet : connexion sécurisée avec or die(), requête sécurisée avec or die(), puis lecture des résultats avec mysqli_fetch_assoc() dans une boucle while. C'est le pattern de base de tout script PHP/MySQL."
+                }
+            ]
+        }
+    ]
+}
